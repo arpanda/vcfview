@@ -16,7 +16,7 @@
 		 	"storeClass" : "vcf_view/Store/SeqFeature/vcf_view",
 			"label": "test",
 			"urlTemplate": "volvox.test.vcf.gz",
-			"type": "FeatureTrack"
+			"type": "JBrowse/View/Track/HTMLVariants"
 		}	
 
 	]	
