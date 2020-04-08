@@ -5,20 +5,15 @@ define([
     'JBrowse/Store/SeqFeature',
     'JBrowse/Store/DeferredStatsMixin',
     'JBrowse/Store/DeferredFeaturesMixin',
-],
-function( declare, 
-    long, 
-    all,
-    SeqFeatureStore,
-    DeferredFeaturesMixin,
-    DeferredStatsMixin,
-    ) {
+], function (declare, long, all, SeqFeatureStore, DeferredFeaturesMixin, DeferredStatsMixin) {
 
-    return declare( [DeferredFeaturesMixin, DeferredStatsMixin], {
-        constructor: function( args ) {
-        var browser = this.browser;
-        console.log('tesing in on');
-        /* do anything you need to initialize your plugin here */
+    return declare([
+        DeferredFeaturesMixin, DeferredStatsMixin
+    ], {
+        constructor: function (args) {
+            var browser = this.browser;
+            console.log('tesing in');
+            /* do anything you need to initialize your plugin here */
         }
     });
 
