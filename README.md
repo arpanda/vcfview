@@ -8,5 +8,5 @@ git clone https://github.com/arpanda/vcf_view.git
  http://localhost/jbrowse/jbrowse/?data=test_vcf_view
 
 
- http://localhost/jbrowse/jbrowse/?data=plugin/vcf_view/test/data
+ http://localhost/jbrowse/jbrowse/?data=plugins/vcf_view/test/data
 
