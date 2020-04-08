@@ -1,1 +1,2 @@
-# vcf_view
+# Jbrowse plugin for VCF file visualization
+ Jbrowse plugin to visualize VCF file content 
