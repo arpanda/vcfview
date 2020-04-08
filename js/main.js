@@ -4,12 +4,12 @@ define([
 ],
 function( declare, JBrowsePlugin) {
 
-return declare( JBrowsePlugin, {
-    constructor: function( args ) {
-    var browser = this.browser;
-
-    /* do anything you need to initialize your plugin here */
-    }
-});
+    return declare( JBrowsePlugin, {
+        constructor: function( args ) {
+        var browser = this.browser;
+        console.log('VCF visualization started');
+        /* do anything you need to initialize your plugin here */
+        }
+    });
 
 });
