@@ -14,12 +14,17 @@
 		},
 		{
 			"key" : "SNPs from VCF",
-			"storeClass1" : "vcf_view/Store/SeqFeature/vcf_view",
 			"storeClass" : "JBrowse/Store/SeqFeature/VCFTabix",
 			"label": "test",
+			"urlTemplate": "gvcf.vcf.gz",
+			"type": "JBrowse/View/Track/HTMLVariants"
+		}
+		{
+			"storeClass" : "vcf_view/Store/SeqFeature/vcf_view",
+			"label": "test1",
 			"urlTemplate": "volvox.test.vcf.gz",
 			"type": "JBrowse/View/Track/HTMLVariants"
-		}	
+		}
 
 	]	
 
