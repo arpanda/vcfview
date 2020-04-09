@@ -10,7 +10,6 @@ define([
 
     return declare([SeqFeatureStore, DeferredFeaturesMixin, DeferredStatsMixin ], {
         constructor: function (args) {
-            var browser = this.browser;
             console.log('tesing in');
             /* do anything you need to initialize your plugin here */
         }
