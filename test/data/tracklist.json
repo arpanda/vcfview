@@ -1,5 +1,4 @@
 {
-	"dataset_id" : "volvox",
 	"formatVersion" : 1,
 	"plugins":[
 		"vcf_view"
