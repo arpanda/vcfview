@@ -1,6 +1,9 @@
 {
 	"dataset_id" : "volvox",
-   	"formatVersion" : 1,
+	"formatVersion" : 1,
+	"plugins":[
+		"vcf_view"
+	],
 	"tracks" : [
 		{
 			"category" : "Reference sequence",
