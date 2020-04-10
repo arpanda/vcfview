@@ -24,8 +24,7 @@
 		{
 			"storeClass" : "vcfview/Store/SeqFeature/vcfview",
 			"label": "test2",
-			"urlTemplate": "volvox.test.vcf.gz",
-			"type": "FeatureView"
+			"urlTemplate": "volvox.test.vcf.gz"
 		}
 
 	]	
