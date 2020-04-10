@@ -13,7 +13,7 @@ var profile = {
 
     basePath: '../../../src',
     packages: [
-        {name: 'vcf_view', location: '../plugins/vcf_view/js' }
+        {name: 'vcfview', location: '../plugins/vcfview/js' }
     ],
 
     layerOptimize: 'closure',
@@ -21,9 +21,9 @@ var profile = {
     selectorEngine: 'acme',
 
     layers: {
-        'vcf_view/main': {
+        'vcfview/main': {
             include: [
-                'vcf_view'
+                'vcfview'
             ],
             exclude: ['JBrowse']
         }
@@ -56,7 +56,7 @@ var profile = {
 
         // Files that should not be copied when the “mini” compiler flag is set to true.
         miniExclude: function (filename, mid) {
-            return !(/^vcf_view/.test(mid));
+            return !(/^vcfview/.test(mid));
         }
     }
 };

@@ -6,7 +6,7 @@ function( declare, JBrowsePlugin) {
 
     return declare( JBrowsePlugin, {
         constructor: function( /* args */ ) {
-        console.log('vcf_view plugin starting');
+        console.log('vcfview plugin starting');
         }
     });
 

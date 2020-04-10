@@ -1,13 +1,13 @@
-# Jbrowse plugin for VCF file visualization
- Jbrowse plugin to visualize VCF file content
+# JBrowse plugin for VCF file visualization
+ JBrowse plugin to visualize VCF file content
 
 ## Installation
 ```
-git clone https://github.com/arpanda/vcf_view.git
+git clone https://github.com/arpanda/vcfview.git
 ```
  #### load plugin on localhost
  ```
- http://localhost/jbrowse/jbrowse/?data=plugins/vcf_view/test/data
- http://localhost/jbrowse/jbrowse/?data=test_vcf_view
+ http://localhost/jbrowse/jbrowse/?data=plugins/vcfview/test/data
+ http://localhost/jbrowse/jbrowse/?data=test_vcfview
 
 ```
