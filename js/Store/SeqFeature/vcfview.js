@@ -15,6 +15,8 @@ define([
     return declare([SeqFeatureStore ], {
         constructor: function (args) {
             console.log("testing the folder name");
+            var thisB = this;
+            console.log(args.urlTemplates);
             //console.log(args.config);
             /* do anything you need to initialize your plugin here */
         }
