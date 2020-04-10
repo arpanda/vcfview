@@ -11,8 +11,9 @@ define([
     ) {
 
     return declare([SeqFeatureStore ], {
-        constructor: function(args) {
-            console.log('tesing in');
+        constructor: function (args) {
+            console.log("tesing in");
+            console.log(args.config);
             /* do anything you need to initialize your plugin here */
         }
 
