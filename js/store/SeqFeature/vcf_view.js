@@ -12,7 +12,7 @@ define([
 
     return declare([SeqFeatureStore ], {
         constructor: function (args) {
-            console.log("tesing in");
+            console.log("tesing the folder name");
             console.log(args.config);
             /* do anything you need to initialize your plugin here */
         }
