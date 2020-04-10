@@ -23,7 +23,7 @@
 		},
 		{
 			"storeClass" : "vcf_view/Store/SeqFeature/vcf_view",
-			"label": "test1",
+			"label": "test2",
 			"urlTemplate": "volvox.test.vcf.gz",
 			"type": "FeatureView"
 		}
