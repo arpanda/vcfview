@@ -1,10 +1,14 @@
 define([
     'dojo/_base/declare',
     'dojo/_base/lang',
+    'dojo/_base/array',
+    'dojo/promise/all',
     'JBrowse/Store/SeqFeature',
 ], function (
     declare, 
     long,
+    array,
+    all,
     SeqFeatureStore,
     ) {
 
