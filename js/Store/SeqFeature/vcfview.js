@@ -21,7 +21,7 @@ define([
 
 
             console.log(this.urlTemplate)
-            console.log(this.chunkSize);
+            console.log(this.chunkSize)
 
             //console.log(args.config);
             /* do anything you need to initialize your plugin here */
