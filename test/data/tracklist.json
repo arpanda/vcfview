@@ -27,7 +27,5 @@
 			"urlTemplate": "volvox.test.vcf.gz",
 			"type": "JBrowse/View/Track/HTMLVariants"
 		}
-
-	]	
-
+	]
 }

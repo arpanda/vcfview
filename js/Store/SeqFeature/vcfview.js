@@ -2,13 +2,11 @@ define([
     'dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/_base/array',
-    'dojo/promise/all',
     'JBrowse/Store/SeqFeature',
 ], function (
     declare, 
     long, 
     array,
-    all,
     SeqFeatureStore,
     ) {
 
@@ -26,13 +24,6 @@ define([
 
             //console.log(args.config);
             /* do anything you need to initialize your plugin here */
-        }
-
-        getFeatures(query, featureCallback, finishCallback, errorCallback) {
-            query.toString = () => `${query.ref},${query.start},${query.end}`
-            const s = query.start - query.start % chunkSize
-            const e = query.end + (chunkSize - query.end % chunkSize)
-
         }
 
     });
