@@ -4,13 +4,7 @@ define([
     'dojo/_base/array',
     'dojo/promise/all',
     'JBrowse/Store/SeqFeature'
-], function (
-    declare, 
-    long,
-    array,
-    all,
-    SeqFeatureStore,
-    ) {
+], function(declare, long, array, all) {
 
     return declare( null, {
         constructor: function (args) {
