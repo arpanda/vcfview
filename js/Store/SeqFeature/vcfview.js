@@ -12,7 +12,7 @@ define([
     SeqFeatureStore,
     ) {
 
-    return declare([SeqFeatureStore ], {
+    return declare( null, {
         constructor: function (args) {
             console.log("testing the folder name")
             this.chunkSize = args.chunkSize || 10000
