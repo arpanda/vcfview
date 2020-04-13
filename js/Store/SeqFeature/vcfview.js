@@ -6,7 +6,7 @@ define([
     'JBrowse/Store/SeqFeature'
 ], function(declare, long, array, all) {
 
-    return declare( null, {
+    return declare([SeqFeatureStore], {
         constructor: function (args) {
             console.log("testing the folder name");
             this.chunkSize = args.chunkSize || 10000
