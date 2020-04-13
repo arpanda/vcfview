@@ -20,11 +20,6 @@
 			"label": "test",
 			"urlTemplate": "gvcf.vcf.gz",
 			"type": "JBrowse/View/Track/HTMLVariants"
-		},
-		{
-			"storeClass" : "vcfview/Store/SeqFeature/vcfview",
-			"label": "test2",
-			"urlTemplate": "volvox.test.vcf.gz"
 		}
 	]
 }
