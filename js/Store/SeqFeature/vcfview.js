@@ -3,7 +3,7 @@ define([
     'dojo/_base/lang',
     'dojo/_base/array',
     'dojo/promise/all',
-    'JBrowse/Store/SeqFeature',
+    'JBrowse/Store/SeqFeature'
 ], function (
     declare, 
     long,
