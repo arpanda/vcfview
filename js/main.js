@@ -2,11 +2,11 @@ define([
     'dojo/_base/declare',
     'JBrowse/Plugin'
 ],
-function ( declare, JBrowsePlugin) {
+function (declare, JBrowsePlugin) {
 
     return declare( JBrowsePlugin, {
         constructor: function ( /* args */ ) {
-            console.log('vcfview plugin starting')
+            console.log('vcfview plugin starting');
         }
     });
 
