@@ -18,11 +18,10 @@ define([
             this.chunkSize = args.chunkSize || 10000
             this.urlTemplate = args.urlTemplate
             this.baseUrl = args.baseUrl
-            this.type = args.type
+
 
             console.log(this.urlTemplate)
-            console.log(this.chunkSize)
-            console.log(this.type)
+            console.log(this.chunkSize);
 
             //console.log(args.config);
             /* do anything you need to initialize your plugin here */
