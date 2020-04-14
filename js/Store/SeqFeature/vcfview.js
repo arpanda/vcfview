@@ -10,7 +10,7 @@ define([
                     console.log(feature.get('genotypes'))
                     console.log(feature.get('genotypes').Sample.DP.values[0])
 
-                    let sample_data = new SimpleFeature({ id: feature.get('id'), data: { start:feature.get('start'), end:feature.get('end'), score: feature.get('genotypes').Sample.DP.values[0] }})
+                    var sample_data = new SimpleFeature({ id: feature.get('id'), data: { start:feature.get('start'), end:feature.get('end'), score: feature.get('genotypes').Sample.DP.values[0] }})
                     featureCallback(sample_data)
 
                 }, finishCallback, errorCallback])
