@@ -23,7 +23,7 @@
     },
     {
       "storeClass": "JBrowse/Store/SeqFeature/VCFTabix",
-      "key": "vcf view testing",
+      "key": "New plugin",
       "label": "vcfview",
       "urlTemplate": "gvcf.vcf.gz",
       "type": "vcfview/View/Track/snpview"
