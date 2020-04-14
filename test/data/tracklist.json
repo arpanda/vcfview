@@ -26,7 +26,7 @@
       "key": "vcf view testing",
       "label": "vcfview",
       "urlTemplate": "gvcf.vcf.gz",
-      "type": "JBrowse/View/Track/HTMLVariants"
+      "type": "CanvasFeatures"
     }
   ]
 }
