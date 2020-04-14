@@ -22,11 +22,11 @@
       "type": "JBrowse/View/Track/HTMLVariants"
     },
     {
-      "storeClass": "vcfview/Store/SeqFeature/vcfview",
+      "storeClass": "JBrowse/Store/SeqFeature/VCFTabix",
       "key": "vcf view testing",
       "label": "vcfview",
       "urlTemplate": "gvcf.vcf.gz",
-      "type": "CanvasFeatures"
+      "type": "vcfview/View/Track/snvview.js"
     }
   ]
 }
