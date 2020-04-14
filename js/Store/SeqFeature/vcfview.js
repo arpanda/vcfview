@@ -1,8 +1,9 @@
 define([
         'dojo/_base/declare',
-        'JBrowse/Store/SeqFeature/VCFTabix'
+        'JBrowse/Store/SeqFeature/VCFTabix',
+        'JBrowse/Model/SimpleFeature'
     ],
-    function (declare, VCFTabix) {
+    function (declare, VCFTabix, SimpleFeature) {
         return declare(VCFTabix, {
             getFeatures: function (query, featureCallback, finishCallback, errorCallback) {
                 this.inherited(arguments, [query,  (feature) => {
