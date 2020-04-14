@@ -6,7 +6,7 @@ define([
         return declare(VCFTabix, {
             getFeatures: function (query, featureCallback, finishCallback, errorCallback) {
                 this.inherited(arguments, [query,  (feature) => {
-                    console.log(feature)
+                    console.log(feature.get('genotypes'))
                     featureCallback(feature)
 
                 }, finishCallback, errorCallback])
