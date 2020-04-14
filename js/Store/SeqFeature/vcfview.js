@@ -1,13 +1,12 @@
 define([
         'dojo/_base/declare',
-        'dojo/_base/lang',
-        'dojo/_base/array',
-        'dojo/promise/all'
+        'JBrowse/Store/SeqFeature/VCFTabix'
     ],
-    function (declare, lang, array, all) {
-        return declare(null, {
-            constructor: function (args) {
-                console.log("I am inside vcf view ");
+    function (declare, VCFTabix) {
+        return declare(VCFTabix, {
+            getFeatures: function (query, featureCallback, finishCallback, errorCallback) {
+                this.inherited(arguments, [query, featureCallback, finishCallback, errorCallback])
             }
+
         });
     });
