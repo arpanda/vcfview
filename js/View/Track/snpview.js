@@ -1,9 +1,9 @@
 define([
         'dojo/_base/declare',
-        'JBrowse/View/Track/SNPCoverage'
+        'JBrowse/View/Track/CanvasFeatures'
     ],
-    function (declare, SNPCoverageStore) {
-        return declare(SNPCoverageStore,
+    function (declare, CanvasFeatures) {
+        return declare(CanvasFeatures,
             {
                 constructor: function (args) {
                     this.inherited(arguments);
