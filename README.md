@@ -4,6 +4,8 @@
 ## Installation
 JBrowse dev version installation
 ```
+# Jbrowse Git: https://github.com/GMOD/jbrowse/releases
+
 # Download JBrowse 1.16.8
 wget https://github.com/GMOD/jbrowse/archive/1.16.8-release.tar.gz
 # Extract
