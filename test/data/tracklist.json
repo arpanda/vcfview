@@ -22,7 +22,7 @@
       "type": "JBrowse/View/Track/HTMLVariants"
     },
     {
-      "storeClass": "JBrowse/Store/SeqFeature/VCFTabix",
+      "storeClass": "vcfview/Store/SeqFeature/vcfview",
       "key": "New plugin",
       "label": "plugin_example",
       "urlTemplate": "gvcf.vcf.gz",
