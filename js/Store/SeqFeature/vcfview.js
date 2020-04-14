@@ -8,7 +8,7 @@ define([
             getFeatures: function (query, featureCallback, finishCallback, errorCallback) {
                 this.inherited(arguments, [query,  (feature) => {
                     console.log(feature)
-                    console.log(feature.get('genotypes').Sample.DP.values[0])
+                    //console.log(feature.get('genotypes').Sample.DP.values[0])
 
                     var sample_data = new SimpleFeature({ id: feature.get('id'), data: { start:feature.get('start'), end:feature.get('end'), score: feature.get('genotypes').Sample.DP.values[0] }})
                     featureCallback(sample_data)
