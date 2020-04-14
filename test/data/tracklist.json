@@ -26,7 +26,8 @@
       "key": "New plugin",
       "label": "plugin_example",
       "urlTemplate": "gvcf.vcf.gz",
-      "type": "JBrowse/View/Track/Wiggle/XYPlot"
+      "type": "JBrowse/View/Track/Wiggle/XYPlot",
+      "max_score": 100
 
     }
   ]
