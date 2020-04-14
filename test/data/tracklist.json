@@ -22,7 +22,7 @@
       "type": "JBrowse/View/Track/HTMLVariants"
     },
     {
-      "storeClass": "vcfview/Store/SeqFeature/vcf_view",
+      "storeClass": "vcfview/Store/SeqFeature/vcfview",
       "key": "vcf view testing",
       "label": "vcfview",
       "urlTemplate": "gvcf.vcf.gz",
