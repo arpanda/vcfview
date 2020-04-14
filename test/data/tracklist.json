@@ -23,7 +23,7 @@
     },
     {
       "key": "vcf view testing",
-      "storeClass": "JBrowse/Store/SeqFeature/vcf_view",
+      "storeClass": "vcfview/Store/SeqFeature/vcf_view",
       "label": "Vcf view test",
       "urlTemplate": "gvcf.vcf.gz"
     }
