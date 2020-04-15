@@ -19,10 +19,10 @@ define([
                     for (var sample_name in samples){
                         console.log(samples[sample_name])
                         var sample_score = feature.get('genotypes')[samples[sample_name]].DP.values[0]
-                        console.log(sample_score)
+                        var sample_data = new SimpleFeature({ id: feature.get('id'), data: { start:feature.get('start'), end:feature.get('end'), score: sample_score }})
+                        featureCallback(sample_data)
                     }
-                    var sample_data = new SimpleFeature({ id: feature.get('id'), data: { start:feature.get('start'), end:feature.get('end'), score: 0 }})
-                    featureCallback(sample_data)
+
 
                     /*
                     console.log(feature)
