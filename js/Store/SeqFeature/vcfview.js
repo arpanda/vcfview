@@ -16,12 +16,12 @@ define([
                     // my code
                     var genotype = feature.get('genotypes')
                     samples = Object.keys(genotype)
-                    for (var sample_name in samples){
-                        console.log(samples[sample_name])
-                        var sample_score = feature.get('genotypes')[samples[sample_name]].DP.values[0]
-                        var sample_data = new SimpleFeature({ id: feature.get('id'), data: { start:feature.get('start'), end:feature.get('end'), score: sample_score }})
-                        featureCallback(sample_data)
-                    }
+
+                    console.log(samples[0])
+                    var sample_score = feature.get('genotypes')[samples[0]].DP.values[0]
+                    var sample_data = new SimpleFeature({ id: feature.get('id'), data: { start:feature.get('start'), end:feature.get('end'), score: sample_score }})
+                    featureCallback(sample_data)
+
 
 
                     /*
