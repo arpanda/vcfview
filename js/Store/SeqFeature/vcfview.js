@@ -22,6 +22,15 @@ define([
                     var sample_position = samples.length-1
                     var sample_name = feature.get('genotypes')[samples[sample_position]]
 
+
+                    var field_list = ['DP', 'mutect_DP', 'strelka_DP', 'lofreq_DP']
+                    field_list.forEach(val => {
+                        if(typeof sample_name[val] != "undefined"){
+                            tmp_score = sample_name[val].values[0]
+                            console.log(tmp_score)
+                        }
+                    });
+
                     var sample_score = 0
                     if( typeof sample_name.DP != 'undefined'){
                         sample_score = sample_name.DP.values[0]
