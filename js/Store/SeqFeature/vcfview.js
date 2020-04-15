@@ -9,7 +9,8 @@ define([
                 this.inherited(arguments, [query,  (feature) => {
 
                     for (var sample_name in feature.get('genotypes')) {
-                        console.log(sample_name);
+                        var sample_info = sample_name.DP.values[0];
+                        console.log(sample_info);
                     }
                     console.log(feature)
                     //console.log(feature.get('genotypes').Sample.DP.values[0])
