@@ -21,9 +21,18 @@ define([
 
                     var sample_position = samples.length-1
                     var sample_name = feature.get('genotypes')[samples[sample_position]]
+
+                    var sample_score = 0
                     if( typeof sample_name.DP != 'undefined'){
-                        var sample_score = sample_name.DP.values[0]
+                        sample_score = sample_name.DP.values[0]
+                    }else if (typeof sample_name.mutect_DP != 'undefined'){
+                        sample_score = sample_name.mutect_DP.values[0]
+                    }else if (typeof sample_name.strelka_DP != 'undefined'){
+                        sample_score = sample_name.strelka_DP.values[0]
+                    }else if (typeof sample_name.lofreq_DP != 'undefined'){
+                        sample_score = sample_name.lofreq_DP.values[0]
                     }
+
                     var sample_data = new SimpleFeature({ id: feature.get('id'), data: { start:feature.get('start'), end:feature.get('end'), score: sample_score }})
                     featureCallback(sample_data)
 
