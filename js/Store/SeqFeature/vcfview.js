@@ -8,10 +8,11 @@ define([
             getFeatures: function (query, featureCallback, finishCallback, errorCallback) {
                 this.inherited(arguments, [query,  (feature) => {
 
+                    /*
                     for (var sample_name in feature.get('genotypes')) {
                         var sample_info = sample_name.DP.values[0];
                         console.log(sample_info);
-                    }
+                    }*/
                     console.log(feature)
                     //console.log(feature.get('genotypes').Sample.DP.values[0])
                     var sample_info = feature.get('genotypes').Sample.DP.values[0];
