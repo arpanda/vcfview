@@ -5,6 +5,9 @@ define([
     ],
     function (declare, VCFTabix, SimpleFeature) {
         return declare(VCFTabix, {
+            constructor: function(args){
+              this.urlTemplate =args.urlTemplate
+            },
 
             getFeatures: function (query, featureCallback, finishCallback, errorCallback) {
 
