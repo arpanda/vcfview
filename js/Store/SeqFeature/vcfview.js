@@ -17,7 +17,7 @@ define([
                     var genotype = feature.get('genotypes')
                     samples = Object.keys(genotype)
                     for (var sample_name in samples){
-                        console.log(samples[sample_name].DP)
+                        console.log(samples[sample_name])
                     }
                     var sample_data = new SimpleFeature({ id: feature.get('id'), data: { start:feature.get('start'), end:feature.get('end'), score: 0 }})
                     featureCallback(sample_data)
