@@ -6,16 +6,11 @@ define([
     function (declare, VCFTabix, SimpleFeature) {
         return declare(VCFTabix, {
             getFeatures: function (query, featureCallback, finishCallback, errorCallback) {
-                console.log(this.urlTemplate)
+
                 this.inherited(arguments, [query,  (feature) => {
 
-                    /*
-                    for (var sample_name in feature.get('genotypes')) {
-                        var sample_info = sample_name.DP.values[0];
-                        console.log(sample_info);
-                    }*/
                     // my code
-                    console.log(arguments.urlTemplate)
+                    console.log(feature.urlTemplate)
                     console.log(feature)
                     var genotype = feature.get('genotypes')
                     samples = Object.keys(genotype)
