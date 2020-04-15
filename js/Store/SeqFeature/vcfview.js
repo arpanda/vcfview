@@ -14,6 +14,7 @@ define([
                         console.log(sample_info);
                     }*/
                     // my code
+                    console.log(arguments.label)
                     console.log(feature)
                     var genotype = feature.get('genotypes')
                     samples = Object.keys(genotype)
