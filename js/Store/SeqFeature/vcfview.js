@@ -24,10 +24,10 @@ define([
 
                     var sample_score = 0
                     var field_list = ['DP', 'mutect_DP', 'strelka_DP', 'lofreq_DP']
-                    field_list.forEach(val => {
-                        if(typeof sample_name[val] != "undefined"){
-                            sample_score = sample_name[val].values[0]
 
+                    field_list.forEach(val => {
+                        if (typeof sample_name[val] != "undefined"){
+                            sample_score = sample_name[val].values[0]
                         }
                     });
 
@@ -42,7 +42,7 @@ define([
                         sample_score = sample_name.lofreq_DP.values[0]
                     }
                     */
-                     */
+
                     // console.log(sample_score)
                     var sample_data = new SimpleFeature({ id: feature.get('id'), data: { start:feature.get('start'), end:feature.get('end'), score: sample_score }})
                     featureCallback(sample_data)
