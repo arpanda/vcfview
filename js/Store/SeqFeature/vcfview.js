@@ -17,6 +17,7 @@ define([
                     var genotype = feature.get('genotypes')
                     samples = Object.keys(genotype)
                     for (var sample_name in samples){
+                        console.log(sample_name)
                         var sample_score = feature.get('genotypes')[sample_name]
                         console.log(sample_score)
                     }
