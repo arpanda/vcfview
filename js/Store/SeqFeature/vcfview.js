@@ -16,32 +16,19 @@ define([
                     // my code
                     // console.log(this.urlTemplate)
                     // console.log(feature)
-                    var genotype = feature.get('genotypes')
-                    samples = Object.keys(genotype)
+                    let genotype = feature.get('genotypes')
+                    let samples = Object.keys(genotype)
 
-                    var sample_position = samples.length-1
-                    var sample_name = feature.get('genotypes')[samples[sample_position]]
+                    let sample_position = samples.length-1
+                    let sample_name = feature.get('genotypes')[samples[sample_position]]
 
-                    var sample_score = 0
-                    var field_list = ['DP', 'mutect_DP', 'strelka_DP', 'lofreq_DP']
-
+                    let sample_score = 0
+                    const field_list = ['DP', 'mutect_DP', 'strelka_DP', 'lofreq_DP']
                     field_list.forEach(val => {
                         if (typeof sample_name[val] != "undefined"){
                             sample_score = sample_name[val].values[0]
                         }
                     });
-
-                    /*
-                    if( typeof sample_name.DP != 'undefined'){
-                        sample_score = sample_name.DP.values[0]
-                    }else if (typeof sample_name.mutect_DP != 'undefined'){
-                        sample_score = sample_name.mutect_DP.values[0]
-                    }else if (typeof sample_name.strelka_DP != 'undefined'){
-                        sample_score = sample_name.strelka_DP.values[0]
-                    }else if (typeof sample_name.lofreq_DP != 'undefined'){
-                        sample_score = sample_name.lofreq_DP.values[0]
-                    }
-                    */
 
                     // console.log(sample_score)
                     var sample_data = new SimpleFeature({ id: feature.get('id'), data: { start:feature.get('start'), end:feature.get('end'), score: sample_score }})
