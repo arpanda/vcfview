@@ -9,7 +9,7 @@ define([
                 this.inherited(arguments, [query,  (feature) => {
                     console.log(feature)
                     //console.log(feature.get('genotypes').Sample.DP.values[0])
-                    var sample_info = feature.get('genotypes')['samples']
+                    var sample_info = feature.get('genotypes').samples
                     console.log(sample_info)
 
                     var sample_data = new SimpleFeature({ id: feature.get('id'), data: { start:feature.get('start'), end:feature.get('end'), score: feature.get('genotypes').Sample.DP.values[0] }})
