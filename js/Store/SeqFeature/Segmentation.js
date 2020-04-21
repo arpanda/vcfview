@@ -30,7 +30,6 @@ function (
         },
         getFeatures: function (query, featCallback, finishCallback, errorCallback) {
             var chunkSize = this.binSize;
-            var dpField = this.dpField;
 
             var s = query.start - query.start % chunkSize;
             var e = query.end + (chunkSize - (query.end % chunkSize));
@@ -74,7 +73,7 @@ function (
                 let sample_position = samples.length - 1;
                 let sample_name = feature.get('genotypes')[samples[sample_position]];
 
-                score += sample_name.DP.values[0];
+                score += sample_name[this.dpField].values[0];
                 numFeatures++;
             }, () => {
                 if (numFeatures) {
