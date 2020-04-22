@@ -18,7 +18,7 @@ function (
         constructor(args) {
             // examples ['DP', 'mutect_DP', 'strelka_DP', 'lofreq_DP'];
             this.dpField = args.dpField || 'DP';
-            this.binSize = args.binSize || 10000;
+            this.binSize = args.binSize || 100000;
             this.featureCache = new LRUCache({
                 name: 'vcfFeatureCache',
                 fillCallback: dojo.hitch(this, '_readChunk'),
@@ -44,7 +44,6 @@ function (
                 chunks.push(chunk);
             }
             var supermethod = this.getInherited(arguments);
-
 
             chunks.forEach(c => {
                 this.featureCache.get(Object.assign(c, {supermethod}), function (f, err) {
@@ -73,10 +72,21 @@ function (
                 let sample_position = samples.length - 1;
                 let sample_name = feature.get('genotypes')[samples[sample_position]];
 
-                score += sample_name[this.dpField].values[0];
+                //score += sample_name[this.dpField].values[0];
+
+                let sample_score = 0
+                const field_list = ['DP', 'mutect_DP', 'strelka_DP', 'lofreq_DP']
+                field_list.forEach(val => {
+                    if (typeof sample_name[val] != "undefined"){
+                        sample_score = sample_name[val].values[0]
+                    }
+                });
+                score += sample_score
+
                 numFeatures++;
             }, () => {
                 if (numFeatures) {
+                    //console.log(start, end, end-start)
                     callback(
                         new SimpleFeature({id: `${start}_${end}`, data: {start, end, score: score / numFeatures}})
                     );
