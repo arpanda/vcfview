@@ -11,13 +11,15 @@ function (
             var browser = args.browser;
             console.log('VcfView plugin starting');
 
-            browser.registerTrackType({
-                label: 'VCFSegmentation',
-                type: 'vcfview/Store/SeqFeature/Segmentation'
-            });
+
             browser.registerTrackType({
                 label: 'VCFSegmentationMultiBin',
                 type: 'vcfview/Store/SeqFeature/SegmentationMultiBin'
+            });
+
+            browser.registerTrackType({
+                label: 'SegmentationTrack',
+                type: 'vcfview/View/Track/SegmentationTrack'
             });
         }
     });

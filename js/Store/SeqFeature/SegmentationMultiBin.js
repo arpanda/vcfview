@@ -16,6 +16,7 @@ function (
 ) {
     return declare([VCFTabix, SeqFeatureStore], {
         constructor(args) {
+            this.store = args.store;
             this.dpField = args.dpField || 'DP';
             this.binSize = args.binSize || 100000;
             this.featureCache = new LRUCache({
