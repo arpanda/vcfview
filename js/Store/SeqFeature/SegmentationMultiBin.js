@@ -28,7 +28,6 @@ function (
             });
         },
         getFeatures: function (query, featCallback, finishCallback, errorCallback) {
-            //console.log(this.binSize)
 
             let chunkSize = "undefined";
             if(typeof  this.binSize == "number"){
