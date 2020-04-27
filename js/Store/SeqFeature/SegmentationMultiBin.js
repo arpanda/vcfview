@@ -4,7 +4,6 @@ define([
     'JBrowse/Store/LRUCache',
     'JBrowse/Store/SeqFeature',
     'JBrowse/Model/SimpleFeature',
-    'JBrowse/Store/SeqFeature/VCFTabix'
 ],
 function (
     declare,
@@ -12,9 +11,8 @@ function (
     LRUCache,
     SeqFeatureStore,
     SimpleFeature,
-    VCFTabix,
 ) {
-    return declare([VCFTabix, SeqFeatureStore], {
+    return declare([SeqFeatureStore], {
         constructor(args) {
             this.store = args.store;
             this.dpField = args.dpField || 'DP';
@@ -53,10 +51,9 @@ function (
                 };
                 chunks.push(chunk);
             }
-            var supermethod = this.getInherited(arguments);
 
             chunks.forEach(c => {
-                this.featureCache.get(Object.assign(c, {supermethod}), function (f, err) {
+                this.featureCache.get(c, function (f, err) {
                     if (err) {
                         errorCallback(err);
                     } else {
@@ -73,9 +70,9 @@ function (
         _readChunk(params, callback) {
             let score = 0;
             let numFeatures = 0;
-            const {supermethod, ref, start, end} = params;
+            const {ref, start, end} = params;
 
-            supermethod.call(this, {ref, start, end}, feature => {
+            this.store.getFeatures({ref, start, end}, feature => {
                 let genotype = feature.get('genotypes');
                 let samples = Object.keys(genotype);
 

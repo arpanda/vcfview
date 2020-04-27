@@ -63,7 +63,7 @@ function (
             let numFeatures = 0;
             const {ref, start, end} = params;
 
-            this.store.getFeatures(this, {ref, start, end}, feature => {
+            this.store.getFeatures({ref, start, end}, feature => {
                 let genotype = feature.get('genotypes');
                 let samples = Object.keys(genotype);
 
