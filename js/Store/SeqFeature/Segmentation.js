@@ -4,7 +4,6 @@ define([
     'JBrowse/Store/LRUCache',
     'JBrowse/Store/SeqFeature',
     'JBrowse/Model/SimpleFeature',
-    'JBrowse/Store/SeqFeature/VCFTabix'
 ],
 function (
     declare,
@@ -12,13 +11,13 @@ function (
     LRUCache,
     SeqFeatureStore,
     SimpleFeature,
-    VCFTabix,
 ) {
-    return declare([VCFTabix, SeqFeatureStore], {
+    return declare([SeqFeatureStore], {
         constructor(args) {
             // examples ['DP', 'mutect_DP', 'strelka_DP', 'lofreq_DP'];
             this.dpField = args.dpField || 'DP';
             this.binSize = args.binSize || 100000;
+            this.store = args.store;
             this.featureCache = new LRUCache({
                 name: 'vcfFeatureCache',
                 fillCallback: dojo.hitch(this, '_readChunk'),
@@ -43,10 +42,9 @@ function (
                 };
                 chunks.push(chunk);
             }
-            var supermethod = this.getInherited(arguments);
 
             chunks.forEach(c => {
-                this.featureCache.get(Object.assign(c, {supermethod}), function (f, err) {
+                this.featureCache.get(c, (f, err) => {
                     if (err) {
                         errorCallback(err);
                     } else {
@@ -63,9 +61,9 @@ function (
         _readChunk(params, callback) {
             let score = 0;
             let numFeatures = 0;
-            const {supermethod, ref, start, end} = params;
+            const {ref, start, end} = params;
 
-            supermethod.call(this, {ref, start, end}, feature => {
+            this.store.getFeatures(this, {ref, start, end}, feature => {
                 let genotype = feature.get('genotypes');
                 let samples = Object.keys(genotype);
 

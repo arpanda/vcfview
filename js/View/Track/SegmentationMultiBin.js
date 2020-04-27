@@ -2,13 +2,12 @@
 define([
     'dojo/_base/declare',
     'JBrowse/View/Track/Wiggle/XYPlot',
-    'vcfview/Store/SeqFeature/Segmentation'
+    'vcfview/Store/SeqFeature/SegmentationMultiBin'
     ],
-    function(declare, XYPlot, Segmentation) {
+    function(declare, XYPlot, SegmentationMultiBin) {
         return declare(XYPlot, {
             constructor(args) {
-                console.log("testing web integration",args)
-                this.store = new Segmentation(
+                this.store = new SegmentationMultiBin(
                 Object.assign(args, {
                     store: this.store,
                     config: this.config,
