@@ -14,7 +14,7 @@ function (
 
             browser.registerTrackType({
                 label: 'VCFSegmentationMultiBin',
-                type: 'vcfview/Store/SeqFeature/SegmentationMultiBin'
+                type: 'vcfview/View/Track/SegmentationMultiBin'
             });
 
             browser.registerTrackType({
