@@ -15,8 +15,8 @@ function (
     return declare([SeqFeatureStore], {
         constructor(args) {
             // examples ['DP', 'mutect_DP', 'strelka_DP', 'lofreq_DP'];
-            this.dpField = args.dpField || 'DP';
-            this.binSize = args.binSize || 100000;
+            this.dpField = args.config.dpField || 'DP';
+            this.binSize = args.config.binSize || 100000;
             this.store = args.store;
             this.featureCache = new LRUCache({
                 name: 'vcfFeatureCache',

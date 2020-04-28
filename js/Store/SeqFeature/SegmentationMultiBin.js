@@ -15,8 +15,8 @@ function (
     return declare([SeqFeatureStore], {
         constructor(args) {
             this.store = args.store;
-            this.dpField = args.dpField || 'DP';
-            this.binSize = args.binSize || 100000;
+            this.dpField = args.config.dpField || 'DP';
+            this.binSize = args.config.binSize || 100000;
             this.featureCache = new LRUCache({
                 name: 'vcfFeatureCache',
                 fillCallback: dojo.hitch(this, '_readChunk'),
@@ -29,15 +29,18 @@ function (
         getFeatures: function (query, featCallback, finishCallback, errorCallback) {
 
             let chunkSize = "undefined";
+            //console.log(this.binSize)
             if(typeof  this.binSize == "number"){
                 chunkSize = this.binSize;
             }else{
                 var bin_array = this.binSize;
-                let zoom = query.basesPerSpan*10
+                let zoom = query.basesPerSpan
                 chunkSize = bin_array.reduce(function(prev, curr) {
                     return (Math.abs(curr - zoom) < Math.abs(prev - zoom) ? curr : prev);
                 });
+
             }
+            console.log(chunkSize)
 
             var s = query.start - query.start % chunkSize;
             var e = query.end + (chunkSize - (query.end % chunkSize));
