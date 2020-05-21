@@ -13,7 +13,7 @@ function (
 
 
             browser.registerTrackType({
-                label: 'VCFSegmentationMultiBinTrack',
+                label: 'SegmentationMultiBinTrack',
                 type: 'vcfview/View/Track/SegmentationMultiBinTrack'
             });
 

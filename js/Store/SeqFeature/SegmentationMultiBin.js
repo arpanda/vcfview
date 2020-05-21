@@ -14,6 +14,8 @@ function (
 ) {
     return declare([SeqFeatureStore], {
         constructor(args) {
+            this.sample = args.config.sample | 0;
+            console.log(this.sample);
             this.store = args.store;
             this.dpField = args.config.dpField || 'DP';
             this.binSize = args.config.binSize || 100000;
@@ -30,6 +32,7 @@ function (
 
             let chunkSize = "undefined";
             //console.log(this.binSize)
+
             if(typeof  this.binSize == "number"){
                 chunkSize = this.binSize;
             }else{
@@ -38,9 +41,8 @@ function (
                 chunkSize = bin_array.reduce(function(prev, curr) {
                     return (Math.abs(curr - zoom) < Math.abs(prev - zoom) ? curr : prev);
                 });
-
             }
-            console.log(chunkSize)
+            //console.log("selected binsize", chunkSize)
 
             var s = query.start - query.start % chunkSize;
             var e = query.end + (chunkSize - (query.end % chunkSize));
@@ -79,16 +81,25 @@ function (
                 let genotype = feature.get('genotypes');
                 let samples = Object.keys(genotype);
 
-                let sample_position = samples.length - 1;
+                //let sample_position = samples.length - 1;
+                //let sample_position = samples.length - 1;
+
+                let sample_position = this.sample  // select sample position
+
+                //console.log(feature.get('genotypes'))
                 let sample_name = feature.get('genotypes')[samples[sample_position]];
 
                 //score += sample_name[this.dpField].values[0];
 
                 let sample_score = 0
-                const field_list = ['DP', 'mutect_DP', 'strelka_DP', 'lofreq_DP']
+                //const field_list = ['DP', 'mutect_DP', 'strelka_DP', 'lofreq_DP']
+                const field_list = ['AF']
                 field_list.forEach(val => {
                     if (typeof sample_name[val] != "undefined"){
+                        //console.log(sample_name[val])
                         sample_score = sample_name[val].values[0]
+                        sample_score = sample_name[val].values[0]
+                        //console.log(sample_score)
                     }
                 });
                 score += sample_score
@@ -96,7 +107,7 @@ function (
                 numFeatures++;
             }, () => {
                 if (numFeatures) {
-                    //console.log(start, end, end-start)
+                    // console.log(start, end, end-start, score / numFeatures)
                     callback(
                         new SimpleFeature({id: `${start}_${end}`, data: {start, end, score: score / numFeatures}})
                     );
