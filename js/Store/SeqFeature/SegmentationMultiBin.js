@@ -14,8 +14,9 @@ function (
 ) {
     return declare([SeqFeatureStore], {
         constructor(args) {
-            this.sample = args.config.sample | 0;
-            console.log(this.sample);
+
+            this.sample = args.config.sample || 0;
+            this.GenotypeField = args.config.GenotypeField || 'DP' ;
             this.store = args.store;
             this.dpField = args.config.dpField || 'DP';
             this.binSize = args.config.binSize || 100000;
@@ -28,6 +29,11 @@ function (
                 maxSize: 100000
             });
         },
+
+        getParser: function(){
+            return this.store.getParser()
+        },
+
         getFeatures: function (query, featCallback, finishCallback, errorCallback) {
 
             let chunkSize = "undefined";
@@ -81,9 +87,6 @@ function (
                 let genotype = feature.get('genotypes');
                 let samples = Object.keys(genotype);
 
-                //let sample_position = samples.length - 1;
-                //let sample_position = samples.length - 1;
-
                 let sample_position = this.sample  // select sample position
 
                 //console.log(feature.get('genotypes'))
@@ -92,16 +95,29 @@ function (
                 //score += sample_name[this.dpField].values[0];
 
                 let sample_score = 0
-                //const field_list = ['DP', 'mutect_DP', 'strelka_DP', 'lofreq_DP']
-                const field_list = ['AF']
-                field_list.forEach(val => {
-                    if (typeof sample_name[val] != "undefined"){
-                        //console.log(sample_name[val])
-                        sample_score = sample_name[val].values[0]
-                        sample_score = sample_name[val].values[0]
-                        //console.log(sample_score)
-                    }
-                });
+
+                let field_list = []
+                if (this.GenotypeField == 'DP'){
+                    field_list = ['DP']
+
+                    field_list.forEach(val => {
+                        if (typeof sample_name[val] != "undefined"){
+                            sample_score = sample_name[val].values[0]
+                        }
+                    });
+
+                }else{
+                    field_list = ['AD']
+                    this.config.max_score = 1
+                    field_list.forEach(val => {
+                        if (typeof sample_name[val] != "undefined"){
+
+                            var all_count = sample_name[val].values.reduce(function(a, b){ return a + b; }, 0);
+                            sample_score = sample_name[val].values[1]/all_count;
+
+                        }
+                    });
+                }
                 score += sample_score
 
                 numFeatures++;

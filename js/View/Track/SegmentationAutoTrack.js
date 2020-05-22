@@ -16,15 +16,19 @@ define([
                     store: this.store,
                     config: this.config,
                     browser: this.browser,
-                    sample: this.sample,
                 }));
             },
-            /*
-            _defaultConfig1: function () {
-                return Util.deepUpdate(lang.clone(this.inherited(arguments)), {
-                    sample: 'tumor',
+            makeTrackLabel: function () {
+                var thisB = this;
+                var c = this.config;
+                this.inherited(arguments)
+
+                thisB.store.getParser().then(function(header) {
+                    thisB.samples = header.samples;
                 });
-            },*/
+
+            },
+
             _trackMenuOptions: function () {
                 var track = this;
                 var options = this.inherited(arguments);
@@ -32,13 +36,19 @@ define([
                     label: 'Sample options',
 
                     onClick: function () {
-                        this.store.getSampleName();
 
                         new SampleSelectVCF({
-                            setCallback: function(sample){
+                            setCallback: function(sample, GenotypeField){
                                 track.config.sample = sample
+                                track.config.GenotypeField = GenotypeField
+                                if(GenotypeField == 'AD'){
+                                    track.config.max_score = 1
+                                }else{
+                                    track.config.max_score = 20
+                                }
+
                                 track.browser.publish('/jbrowse/v1/c/tracks/replace', [track.config]);
-                            },
+                            }, samples: track.samples
                         }).show();
 
                     }
