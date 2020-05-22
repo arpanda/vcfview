@@ -18,7 +18,6 @@ define([
                     browser: this.browser,
                     sample: this.sample,
                 }));
-
             },
             /*
             _defaultConfig1: function () {
@@ -33,13 +32,13 @@ define([
                     label: 'Sample options',
 
                     onClick: function () {
-                        new SampleSelectVCF({
+                        this.store.getSampleName();
 
+                        new SampleSelectVCF({
                             setCallback: function(sample){
                                 track.config.sample = sample
                                 track.browser.publish('/jbrowse/v1/c/tracks/replace', [track.config]);
                             },
-
                         }).show();
 
                     }

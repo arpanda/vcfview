@@ -117,6 +117,10 @@ function (
             }, error => {
                 callback(null, error);
             });
+        },
+        getSampleName: function(query, featCallback, finishCallback, errorCallback){
+            console.log('sample name', query.start)
+
         }
     });
 });
