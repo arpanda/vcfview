@@ -22,10 +22,14 @@ function (
         title: 'Set sample name',
 
         constructor: function (args) {
-            console.log(args);
+
             this.sampleList = args.samples;
             this.sample = args.sample || 0;
             this.GenotypeField = args.GenotypeField || 'DP';
+
+            this.SelectedSample = args.SelectedSample;
+            this.SelectedGenotype = args.SelectedGenotype;
+
             this.browser = args.browser;
             this.setCallback = args.setCallback || function () {};
             this.cancelCallback = args.cancelCallback || function () {};
@@ -56,21 +60,39 @@ function (
 
         show: function (/* callback */) {
 
-            // this.SampleSelect  = this.sample.map((sample, index) => ({ label: sample, value: index }))
+            var SelectedSampleChecker = function(selectedSample) {
+                return function(sample, index) {
+                    if(index == selectedSample){
+                         return({ label: sample, value: index, selected: true})
+                    }else{
+                         return({ label: sample, value: index})
+                    }
+                };
+            };
+
+            var SelectedGenotypeChecker = function(selectedGenotype) {
+                return function(genotype) {
+                    console.log(genotype);
+                    if(genotype == selectedGenotype){
+                         console.log('selected', genotype)
+                         return({ label: genotype, value: genotype, selected: true})
+                    }else{
+                         return({ label: genotype, value: genotype})
+                    }
+                };
+            };
 
             this.SampleSelect = new Select({
                 name: 'sample_select',
-                options: this.sampleList.map((sample, index) => ({ label: sample, value: index })),
+                // options: this.sampleList.map((sample, index) => ({ label: sample, value: index })) ,
+                options: this.sampleList.map(SelectedSampleChecker(this.SelectedSample)),
 
             });
 
             this.GenotypeFieldSelect = new Select({
                 name: 'genotype_field',
-                options: [
-                    { label: 'DP', value: 'DP' },
-                    { label: 'AD', value: 'AD' }
-                ],
-                value: this.GenotypeField
+                options: ['DP', 'AD'].map(SelectedGenotypeChecker(this.SelectedGenotype)),
+
             });
 
             this.set('content', [

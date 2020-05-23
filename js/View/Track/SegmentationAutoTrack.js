@@ -15,7 +15,7 @@ define([
                 Object.assign(args, {
                     store: this.store,
                     config: this.config,
-                    browser: this.browser,
+                    browser: this.browser
                 }));
             },
             makeTrackLabel: function () {
@@ -26,7 +26,6 @@ define([
                 thisB.store.getParser().then(function(header) {
                     thisB.samples = header.samples;
                 });
-
             },
 
             _trackMenuOptions: function () {
@@ -48,9 +47,10 @@ define([
                                 }
 
                                 track.browser.publish('/jbrowse/v1/c/tracks/replace', [track.config]);
-                            }, samples: track.samples
+                            }, samples: track.samples,
+                            SelectedSample: track.config.sample || 0,
+                            SelectedGenotype: track.config.GenotypeField || 'DP'
                         }).show();
-
                     }
                 });
                 return options;
