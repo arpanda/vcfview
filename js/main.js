@@ -21,6 +21,11 @@ function (
                 label: 'SegmentationTrack',
                 type: 'vcfview/View/Track/SegmentationTrack'
             });
+
+            browser.registerTrackType({
+                label: 'SegmentationAutoTrack',
+                type: 'vcfview/View/Track/SegmentationAutoTrack'
+            });
         }
     });
 });

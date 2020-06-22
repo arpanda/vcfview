@@ -36,6 +36,7 @@ define([
 
                     onClick: function () {
 
+                        console.log('clicked');
                         new SampleSelectVCF({
                             setCallback: function(sample, GenotypeField){
                                 track.config.sample = sample
@@ -43,7 +44,7 @@ define([
                                 if(GenotypeField == 'AD'){
                                     track.config.max_score = 1
                                 }else{
-                                    track.config.max_score = 20
+                                    track.config.max_score = undefined
                                 }
 
                                 track.browser.publish('/jbrowse/v1/c/tracks/replace', [track.config]);

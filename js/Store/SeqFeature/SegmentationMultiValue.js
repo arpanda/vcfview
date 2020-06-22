@@ -39,9 +39,7 @@ function (
 
         getFeatures: function (query, featCallback, finishCallback, errorCallback) {
 
-            // console.log(query);
             let chunkSize = "undefined";
-            //console.log(this.binSize)
 
             if(typeof  this.binSize == "number"){
                 chunkSize = this.binSize;
@@ -117,10 +115,8 @@ function (
                     this.config.max_score = 1
                     field_list.forEach(val => {
                         if (typeof sample_name[val] != "undefined"){
-
                             var all_count = sample_name[val].values.reduce(function(a, b){ return a + b; }, 0);
                             sample_score = sample_name[val].values[1]/all_count;
-
                         }
                     });
                 }
@@ -131,12 +127,7 @@ function (
                 if (numFeatures) {
                     // console.log(start, end, end-start, score / numFeatures)
                     callback(
-                        new SimpleFeature({id: `${start}_${end}`, data: {start, end, score: score / numFeatures, source: 'raw'}},)
-
-                    );
-                    callback(
-                        new SimpleFeature({id: `${start}_${end}`, data: {start, end, score: score / numFeatures + 5, source: 'raw_modified'}},)
-
+                        new SimpleFeature({id: `${start}_${end}`, data: {start, end, score: score / numFeatures}})
                     );
                 } else {
                     callback(null);
