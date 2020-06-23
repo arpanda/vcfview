@@ -53,8 +53,8 @@ function (
                 });
             }
 
-            console.log(query.basesPerSpan)
-            console.log("selected binsize", chunkSize)
+            //console.log(query.basesPerSpan)
+            //console.log("selected binsize", chunkSize)
 
             var s = query.start - query.start % chunkSize;
             var e = query.end + (chunkSize - (query.end % chunkSize));
@@ -108,7 +108,9 @@ function (
 
                     field_list.forEach(val => {
                         if (typeof sample_name[val] != "undefined"){
-                            sample_score = sample_name[val].values[0]
+                            if(sample_name[val].values){
+                                sample_score = sample_name[val].values[0]
+                            }
                         }
                     });
 
@@ -131,11 +133,7 @@ function (
                 if (numFeatures) {
                     // console.log(start, end, end-start, score / numFeatures)
                     callback(
-                        new SimpleFeature({id: `${start}_${end}`, data: {start, end, score: score / numFeatures, source: 'raw'}},)
-
-                    );
-                    callback(
-                        new SimpleFeature({id: `${start}_${end}`, data: {start, end, score: score / numFeatures + 5, source: 'raw_modified'}},)
+                        new SimpleFeature({id: `${start}_${end}`, data: {start, end, score: score / numFeatures}},)
 
                     );
                 } else {
