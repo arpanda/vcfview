@@ -28,6 +28,7 @@ function (
             });
         },
         getFeatures: function (query, featCallback, finishCallback, errorCallback) {
+            console.log(this.dpField);
             var chunkSize = this.binSize;
 
             var s = query.start - query.start % chunkSize;
@@ -59,6 +60,7 @@ function (
             });
         },
         _readChunk(params, callback) {
+            console.log(this.dpField);
             let score = 0;
             let numFeatures = 0;
             const {ref, start, end} = params;

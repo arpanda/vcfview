@@ -4,22 +4,13 @@ define([
     'JBrowse/Store/LRUCache',
     'JBrowse/Store/SeqFeature',
     'JBrowse/Model/SimpleFeature',
+    'JBrowse/Store/SeqFeature/VCFTabix'
 ],
-function (
-    declare,
-    lang,
-    LRUCache,
-    SeqFeatureStore,
-    SimpleFeature,
-) {
-    return declare([SeqFeatureStore], {
+function (declare, lang, LRUCache, SeqFeatureStore, SimpleFeature, VCFTabix,) {
+    return declare([VCFTabix, SeqFeatureStore], {
         constructor(args) {
-
-            this.sample = args.config.sample || 0;
-            this.GenotypeField = args.config.GenotypeField || 'DP' ;
-            this.store = args.store;
-            this.dpField = args.config.dpField || 'DP';
-            this.binSize = args.config.binSize || 100000;
+            this.dpField = args.dpField || 'DP';
+            this.binSize = args.binSize || 100000;
             this.featureCache = new LRUCache({
                 name: 'vcfFeatureCache',
                 fillCallback: dojo.hitch(this, '_readChunk'),
@@ -29,30 +20,8 @@ function (
                 maxSize: 100000
             });
         },
-        getGlobalStats: function(){
-            console.log('inside global stat');
-            this.inherited(arguments)
-        },
-        getParser: function(){
-            return this.store.getParser()
-        },
-
         getFeatures: function (query, featCallback, finishCallback, errorCallback) {
-
-            let chunkSize = "undefined";
-
-            if(typeof  this.binSize == "number"){
-                chunkSize = this.binSize;
-            }else{
-                var bin_array = this.binSize;
-                let zoom = query.basesPerSpan
-                chunkSize = bin_array.reduce(function(prev, curr) {
-                    return (Math.abs(curr - zoom) < Math.abs(prev - zoom) ? curr : prev);
-                });
-            }
-
-            console.log(query.basesPerSpan)
-            console.log("selected binsize", chunkSize)
+            var chunkSize = this.binSize;
 
             var s = query.start - query.start % chunkSize;
             var e = query.end + (chunkSize - (query.end % chunkSize));
@@ -66,9 +35,10 @@ function (
                 };
                 chunks.push(chunk);
             }
+            var supermethod = this.getInherited(arguments);
 
             chunks.forEach(c => {
-                this.featureCache.get(c, function (f, err) {
+                this.featureCache.get(Object.assign(c, {supermethod}), function (f, err) {
                     if (err) {
                         errorCallback(err);
                     } else {
@@ -85,47 +55,30 @@ function (
         _readChunk(params, callback) {
             let score = 0;
             let numFeatures = 0;
-            const {ref, start, end} = params;
+            const {supermethod, ref, start, end} = params;
 
-            this.store.getFeatures({ref, start, end}, feature => {
+            supermethod.call(this, {ref, start, end}, feature => {
                 let genotype = feature.get('genotypes');
                 let samples = Object.keys(genotype);
 
-                let sample_position = this.sample  // select sample position
-
-                //console.log(feature.get('genotypes'))
+                let sample_position = samples.length - 1;
                 let sample_name = feature.get('genotypes')[samples[sample_position]];
 
                 //score += sample_name[this.dpField].values[0];
 
                 let sample_score = 0
-
-                let field_list = []
-                if (this.GenotypeField == 'DP'){
-                    field_list = ['DP']
-
-                    field_list.forEach(val => {
-                        if (typeof sample_name[val] != "undefined"){
-                            sample_score = sample_name[val].values[0]
-                        }
-                    });
-
-                }else{
-                    field_list = ['AD']
-                    this.config.max_score = 1
-                    field_list.forEach(val => {
-                        if (typeof sample_name[val] != "undefined"){
-                            var all_count = sample_name[val].values.reduce(function(a, b){ return a + b; }, 0);
-                            sample_score = sample_name[val].values[1]/all_count;
-                        }
-                    });
-                }
+                const field_list = ['DP', 'mutect_DP', 'strelka_DP', 'lofreq_DP']
+                field_list.forEach(val => {
+                    if (typeof sample_name[val] != "undefined"){
+                        sample_score = sample_name[val].values[0]
+                    }
+                });
                 score += sample_score
 
                 numFeatures++;
             }, () => {
                 if (numFeatures) {
-                    // console.log(start, end, end-start, score / numFeatures)
+                    //console.log(start, end, end-start)
                     callback(
                         new SimpleFeature({id: `${start}_${end}`, data: {start, end, score: score / numFeatures}})
                     );
@@ -135,11 +88,6 @@ function (
             }, error => {
                 callback(null, error);
             });
-        },
-        getSampleName: function(query, featCallback, finishCallback, errorCallback){
-            console.log('sample name', query.start)
-
         }
     });
 });
-

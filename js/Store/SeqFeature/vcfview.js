@@ -8,7 +8,7 @@ define([
             constructor: function(args){
                 this.urlTemplate = args.urlTemplate
 
-                this.BinSize = 1
+                this.BinSize = 1000
                 if(typeof args.BinSize != "undefined"){
                     this.BinSize = args.BinSize
                 }
