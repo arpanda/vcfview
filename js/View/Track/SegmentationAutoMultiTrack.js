@@ -1,20 +1,11 @@
 define([
   "dojo/_base/declare",
-  "dojo/_base/array",
-  "dojo/_base/lang",
   "JBrowse/View/Track/Wiggle/XYPlot",
+  "MultiBigWig/View/Track/MultiWiggle/MultiXYPlot",
   "vcfview/Store/SeqFeature/SegmentationMultiBin",
   "vcfview/View/Dialog/SampleSelectVCF",
   "JBrowse/Util",
-], function (
-  declare,
-  array,
-  lang,
-  XYPlot,
-  SegmentationMultiBin,
-  SampleSelectVCF,
-  Util
-) {
+], function (declare, XYPlot, SegmentationMultiBin, SampleSelectVCF, Util) {
   return declare(XYPlot, {
     constructor(args) {
       this.store = new SegmentationMultiBin(
