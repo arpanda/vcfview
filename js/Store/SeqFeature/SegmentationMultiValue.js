@@ -17,54 +17,27 @@ define([
     constructor(args) {
       this.dpField = args.dpField || "DP";
       this.binSize = args.binSize || 100000;
-      this.featureCache = new LRUCache({
-        name: "vcfFeatureCache",
-        fillCallback: dojo.hitch(this, "_readChunk"),
-        sizeFunction: function (features) {
-          return features.length;
-        },
-        maxSize: 100000,
-      });
+      // this.featureCache = new LRUCache({
+      //   name: "vcfFeatureCache",
+      //   fillCallback: dojo.hitch(this, "_readChunk"),
+      //   sizeFunction: function (features) {
+      //     return features.length;
+      //   },
+      //   maxSize: 100000,
+      // });
     },
-    getFeatures: function (query, featCallback, finishCallback, errorCallback) {
-      var chunkSize = this.binSize;
-
-      var s = query.start - (query.start % chunkSize);
-      var e = query.end + (chunkSize - (query.end % chunkSize));
-      var chunks = [];
-
-      var chunksProcessed = 0;
-      for (let start = s; start < e; start += chunkSize) {
-        var chunk = { ref: query.ref, start: start, end: start + chunkSize };
-        chunk.toString = function () {
-          return query.ref + "," + query.start + "," + query.end;
-        };
-        chunks.push(chunk);
-      }
+    async getFeatures(query, featCallback, finishCallback, errorCallback) {
+      var binSize = this.binSize;
       var supermethod = this.getInherited(arguments);
+      const { ref, start: originalStart, end: originalEnd } = query;
 
-      chunks.forEach((c) => {
-        this.featureCache.get(Object.assign(c, { supermethod }), function (
-          f,
-          err
-        ) {
-          if (err) {
-            errorCallback(err);
-          } else {
-            if (f) {
-              featCallback(f);
-            }
-            if (++chunksProcessed === chunks.length) {
-              finishCallback();
-            }
-          }
-        });
-      });
-    },
-    _readChunk(params, callback) {
-      let score = 0;
-      let numFeatures = 0;
-      const { supermethod, ref, start, end } = params;
+      var start = originalStart - (originalStart % binSize);
+      var end = originalEnd + (binSize - (originalEnd % binSize));
+
+      var bins = [];
+      for (let i = start; i < end; i += binSize) {
+        bins.push({ score: 0, count: 0 });
+      }
 
       supermethod.call(
         this,
@@ -85,26 +58,43 @@ define([
               sample_score = sample_name[val].values[0];
             }
           });
-          score += sample_score;
-
-          numFeatures++;
+          const featureBin = Math.max(
+            Math.floor((feature.get("start") - start) / binSize),
+            0
+          );
+          bins[featureBin].score += sample_score;
+          bins[featureBin].count++;
         },
         () => {
-          if (numFeatures) {
-            //console.log(start, end, end-start)
-            callback(
-              new SimpleFeature({
-                id: `${start}_${end}`,
-                data: { start, end, score: score / numFeatures },
-              })
-            );
-          } else {
-            callback(null);
-          }
+          bins.forEach((bin, i) => {
+            if (bin.count) {
+              featCallback(
+                new SimpleFeature({
+                  id: `${start + binSize * i}_feat_1`,
+                  data: {
+                    start: start + binSize * i,
+                    end: start + binSize * (i + 1),
+                    score: bin.score / bin.count,
+                    source: "main",
+                  },
+                })
+              );
+              featCallback(
+                new SimpleFeature({
+                  id: `${start + binSize * i}_feat_2`,
+                  data: {
+                    start: start + binSize * i,
+                    end: start + binSize * (i + 1),
+                    score: bin.score / bin.count + 5,
+                    source: "secondary",
+                  },
+                })
+              );
+            }
+          });
+          finishCallback();
         },
-        (error) => {
-          callback(null, error);
-        }
+        errorCallback
       );
     },
   });

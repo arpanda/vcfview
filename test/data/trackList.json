@@ -42,7 +42,32 @@
       "dpField": ["DP"],
       "adField": ["AD"],
       "autoscale": "local",
-      "binSize": [100000, 1000000]
+      "binSize": 100000
+    },
+    {
+      "storeClass": "vcfview/Store/SeqFeature/SegmentationMultiValue",
+      "urlTemplate": "inputVcfs/trio.vcf.gz",
+      "showTooltips": true,
+      "showLabels": true,
+      "clickTooltips": true,
+      "key": "Segmentation MultiBigWig",
+      "label": "LGG 4",
+      "type": "vcfview/View/Track/SegmentationAutoMultiTrack",
+      "urlTemplates": [
+        { "name": "main", "color": "green" },
+        { "name": "secondary", "color": "purple" }
+      ],
+      "max_score": 100,
+      "noFill": true,
+      "binSize": 1000000,
+      "dpField": ["DP"],
+      "adField": ["AD"],
+      "autoscale": "local",
+      "chunkSizeLimit": 100000000
+    },
+    {
+      "urlTemplate": "inputVcfs/trio.vcf.gz",
+      "label": "trio vcf"
     }
   ]
 }

@@ -1,28 +1,14 @@
 define([
   "dojo/_base/declare",
-  "JBrowse/View/Track/Wiggle/XYPlot",
   "MultiBigWig/View/Track/MultiWiggle/MultiXYPlot",
-  "vcfview/Store/SeqFeature/SegmentationMultiBin",
   "vcfview/View/Dialog/SampleSelectVCF",
-  "JBrowse/Util",
-], function (declare, XYPlot, SegmentationMultiBin, SampleSelectVCF, Util) {
+], function (declare, XYPlot, SampleSelectVCF) {
   return declare(XYPlot, {
-    constructor(args) {
-      this.store = new SegmentationMultiBin(
-        Object.assign(args, {
-          store: this.store,
-          config: this.config,
-          browser: this.browser,
-        })
-      );
-    },
-    makeTrackLabel: function () {
-      var thisB = this;
-      var c = this.config;
+    makeTrackLabel() {
       this.inherited(arguments);
 
-      thisB.store.getParser().then(function (header) {
-        thisB.samples = header.samples;
+      this.store.getParser().then((header) => {
+        this.samples = header.samples;
       });
     },
 
