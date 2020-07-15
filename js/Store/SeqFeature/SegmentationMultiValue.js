@@ -25,11 +25,13 @@ define([
       //   },
       //   maxSize: 100000,
       // });
+      console.log('check start');
     },
     async getFeatures(query, featCallback, finishCallback, errorCallback) {
       var binSize = this.binSize;
       var supermethod = this.getInherited(arguments);
       const { ref, start: originalStart, end: originalEnd } = query;
+      console.log('start: ', originalStart, 'end: ',originalEnd);
 
       var start = originalStart - (originalStart % binSize);
       var end = originalEnd + (binSize - (originalEnd % binSize));
@@ -66,6 +68,15 @@ define([
           bins[featureBin].count++;
         },
         () => {
+          
+          var bin_count = 0,
+              bin_score = 0;
+
+          bins.forEach((bin)=> {
+            bin_count += bin.count;
+            bin_score += bin.score
+          });
+          console.log('Avg DP: ', bin_score/bin_count);
           bins.forEach((bin, i) => {
             if (bin.count) {
               featCallback(
