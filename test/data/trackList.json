@@ -68,6 +68,22 @@
     {
       "urlTemplate": "inputVcfs/trio.vcf.gz",
       "label": "trio vcf"
+    },
+    {
+      "urlTemplate": "inputVcfs/trio.vcf.gz",
+      "storeClass": "vcfview/Store/SeqFeature/VCFRawTabix",
+      "type": "JBrowse/View/Track/Wiggle/XYPlot",
+      "label": "trio vcf raw DP parser",
+      "chunkSizeLimit": 100000000,
+      "max_score": 100
+    },
+    {
+      "urlTemplate": "inputVcfs/trio.vcf.gz",
+      "storeClass": "vcfview/Store/SeqFeature/VCFExtra",
+      "type": "JBrowse/View/Track/Wiggle/XYPlot",
+      "label": "trio vcf normal DP parser",
+      "chunkSizeLimit": 100000000,
+      "max_score": 100
     }
   ]
 }
