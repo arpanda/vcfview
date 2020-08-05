@@ -2,6 +2,24 @@ const { TabixIndexedFile } = cjsRequire('@gmod/tabix');
 const VCF = cjsRequire('@gmod/vcf');
 import AbortablePromiseCache from 'abortable-promise-cache';
 import LRU from 'quick-lru';
+
+function getMean(data) {
+  return (
+    data.reduce(function (a, b) {
+      return a + b;
+    }) / data.length
+  );
+}
+function getSD(data) {
+  let m = getMean(data);
+  return Math.sqrt(
+    data.reduce(function (sq, n) {
+      return sq + (n - m) * (n - m);
+    }, 0) /
+      (data.length - 1),
+  );
+}
+
 define([
   'dojo/_base/declare',
   'JBrowse/Store/SeqFeature/VCFTabix',
@@ -33,6 +51,8 @@ define([
         });
       }
 
+      let averages = samples.map(() => ({ scores: [] }));
+
       await this.indexedData.getLines(
         regularizedReferenceName,
         0,
@@ -47,13 +67,20 @@ define([
           for (let i = 0; i < samples.length; i++) {
             const sampleName = samples[i];
             const score = +fields[9 + i].split(':')[2];
+            averages[i].scores.push(isNaN(score) ? 0 : score);
             bins[featureBin].samples[i].score += isNaN(score) ? 0 : score;
             bins[featureBin].samples[i].count++;
             bins[featureBin].samples[i].source = sampleName;
           }
         },
       );
-      console.timeEnd('vcfraw');
+      bins.forEach(bin => {
+        bin.samples.forEach((sample, index) => {
+          sample.score =
+            (sample.score / sample.count - getMean(averages[index].scores)) /
+            getSD(averages[index].scores);
+        });
+      });
       return bins;
     },
 
@@ -71,7 +98,7 @@ define([
               featureCallback(
                 new SimpleFeature({
                   data: Object.assign(Object.create(feature), {
-                    score: sample.score / sample.count,
+                    score: sample.score,
                     source: sample.source,
                   }),
                 }),
