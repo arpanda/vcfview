@@ -6,7 +6,6 @@ define([
   return declare(XYPlot, {
     makeTrackLabel() {
       this.inherited(arguments);
-      console.log(this.store);
 
       this.store.getParser().then((header) => {
         this.samples = header.samples;
@@ -19,12 +18,8 @@ define([
         label: "Sample options",
 
         onClick: () => {
-          console.log("clicked");
           new Dialog({
             setCallback: (sample, GenotypeField) => {
-              console.log({ sample, GenotypeField });
-              console.log(this.config, this.store);
-              console.log(this.browser.stores);
               this.config.sample = sample;
               this.config.GenotypeField = GenotypeField;
               if (GenotypeField == "AD") {
@@ -37,13 +32,8 @@ define([
               clone.type = this.config.storeClass;
               clone.sample = sample;
               clone.GenotypeField = GenotypeField;
-              var storeName = this.browser.addStoreConfig(null, clone);
-
-              // const clone = Object.create(this.config);
-              // const conf = Object.assign(this.config, {
-              //   store: storeName,
-              // });
-              this.config.store = storeName;
+              this.browser.releaseStore(this.config.store);
+              this.config.store = this.browser.addStoreConfig(null, clone);
               this.browser.publish("/jbrowse/v1/c/tracks/replace", [
                 this.config,
               ]);

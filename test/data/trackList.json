@@ -105,12 +105,10 @@
       "type": "vcfview/View/Track/MultiVCF",
       "label": "trio vcf multivcf",
       "chunkSizeLimit": 100000000,
-      "max_score": 5,
-      "min_score": -5,
+      "max_score": 100,
       "urlTemplates": [
         { "name": "NA12877", "color": "green" },
-        { "name": "NA12878", "color": "orange" },
-        { "name": "NA12882", "color": "blue" }
+        { "name": "average", "color": "black" }
       ]
     }
   ]

@@ -25,7 +25,7 @@ define([
 ], function (declare, VCFTabix, SimpleFeature) {
   return declare(VCFTabix, {
     constructor(args) {
-      console.log(args);
+      this.sample = args.sample || 0;
       this.featureCache = new AbortablePromiseCache({
         cache: new LRU({
           maxSize: 20,
@@ -52,35 +52,37 @@ define([
 
       let averages = samples.map(() => ({ scores: [] }));
 
-      //       await this.indexedData.getLines(
-      //         regularizedReferenceName,
-      //         0,
-      //         undefined,
-      //         (line, fileOffset) => {
-      //           const fields = line.split("\t");
-      //           const start = +fields[1];
-      //           const featureBin = Math.max(Math.floor(start / binSize), 0);
-      //           bins[featureBin].start = featureBin * binSize;
-      //           bins[featureBin].end = (featureBin + 1) * binSize;
-      //           bins[featureBin].id = fileOffset;
-      //           for (let i = 0; i < samples.length; i++) {
-      //             const sampleName = samples[i];
-      //             const score = +fields[9 + i].split(":")[2];
-      //             averages[i].scores.push(isNaN(score) ? 0 : score);
-      //             bins[featureBin].samples[i].score += isNaN(score) ? 0 : score;
-      //             bins[featureBin].samples[i].count++;
-      //             bins[featureBin].samples[i].source = sampleName;
-      //           }
-      //         }
-      //       );
-      //       bins.forEach((bin) => {
-      //         bin.samples.forEach((sample, index) => {
-      //           sample.score =
-      //             (sample.score / sample.count - getMean(averages[index].scores)) /
-      //             getSD(averages[index].scores);
-      //         });
-      //       });
-      return bins;
+      await this.indexedData.getLines(
+        regularizedReferenceName,
+        0,
+        undefined,
+        (line, fileOffset) => {
+          const fields = line.split("\t");
+          const start = +fields[1];
+          const featureBin = Math.max(Math.floor(start / binSize), 0);
+          bins[featureBin].start = featureBin * binSize;
+          bins[featureBin].end = (featureBin + 1) * binSize;
+          bins[featureBin].id = fileOffset;
+          for (let i = 0; i < samples.length; i++) {
+            const sampleName = samples[i];
+            const score = +fields[9 + i].split(":")[2];
+            averages[i].scores.push(isNaN(score) ? 0 : score);
+            bins[featureBin].samples[i].score += isNaN(score) ? 0 : score;
+            bins[featureBin].samples[i].count++;
+            bins[featureBin].samples[i].source = sampleName;
+          }
+        }
+      );
+      bins.forEach((bin) => {
+        bin.samples.forEach((sample, index) => {
+          sample.score = sample.score / sample.count;
+        });
+      });
+
+      return {
+        averages: averages.map((average) => getMean(average.scores)),
+        bins,
+      };
     },
 
     async _getFeatures(
@@ -90,21 +92,36 @@ define([
       errorCallback
     ) {
       try {
-        const features = await this.featureCache.get(query.ref, query);
-        features.forEach((feature) => {
+        const { bins, averages } = await this.featureCache.get(
+          query.ref,
+          query
+        );
+        bins.forEach((feature) => {
           if (feature.end > query.start && feature.start < query.end) {
-            feature.samples.forEach((sample) => {
-              featureCallback(
-                new SimpleFeature({
-                  data: Object.assign(Object.create(feature), {
-                    score: sample.score,
-                    source: sample.source,
-                  }),
-                })
-              );
-            });
+            const sample = feature.samples[this.sample];
+            featureCallback(
+              new SimpleFeature({
+                data: Object.assign(Object.create(feature), {
+                  score: sample.score,
+                  source: sample.source,
+                }),
+              })
+            );
           }
         });
+
+        console.log(averages[this.sample]);
+        featureCallback(
+          new SimpleFeature({
+            data: {
+              start: 0,
+              end: this.browser.view.ref.end,
+              score: averages[this.sample],
+              uniqueId: "average_" + this.sample,
+              source: "average",
+            },
+          })
+        );
 
         finishedCallback();
       } catch (e) {
