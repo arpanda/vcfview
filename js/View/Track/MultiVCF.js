@@ -22,11 +22,12 @@ define([
             setCallback: (sample, GenotypeField) => {
               this.config.sample = sample;
               this.config.GenotypeField = GenotypeField;
-              if (GenotypeField == "AD") {
-                this.config.max_score = 1;
-              } else {
-                this.config.max_score = undefined;
-              }
+              // if (GenotypeField == "AD") {
+              //   this.config.max_score = 1;
+              // } else {
+              //   this.config.max_score = undefined;
+              //     console.log(this.config)
+              // }
 
               const clone = dojo.clone(this.config);
               clone.type = this.config.storeClass;
@@ -34,6 +35,7 @@ define([
               clone.GenotypeField = GenotypeField;
               this.browser.releaseStore(this.config.store);
               this.config.store = this.browser.addStoreConfig(null, clone);
+              console.log(this.config);
               this.browser.publish("/jbrowse/v1/c/tracks/replace", [
                 this.config,
               ]);

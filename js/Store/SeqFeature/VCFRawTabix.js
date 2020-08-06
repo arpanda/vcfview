@@ -125,6 +125,7 @@ define([
             },
           })
         );
+        console.log(bins);
 
         finishedCallback();
       } catch (e) {
