@@ -72,11 +72,13 @@ define([
           }
         }
       );
+
+      const sds = averages.map((average) => getSD(average.scores));
+      const means = averages.map((average) => getMean(average.scores));
       bins.forEach((bin) => {
         bin.samples.forEach((sample, index) => {
           sample.score =
-            (sample.score / sample.count - getMean(averages[index].scores)) /
-            getSD(averages[index].scores);
+            (sample.score / sample.count - means[index]) / sds[index];
         });
       });
       return bins;
