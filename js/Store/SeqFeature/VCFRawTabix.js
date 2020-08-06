@@ -1,7 +1,5 @@
-const { TabixIndexedFile } = cjsRequire('@gmod/tabix');
-const VCF = cjsRequire('@gmod/vcf');
-import AbortablePromiseCache from 'abortable-promise-cache';
-import LRU from 'quick-lru';
+import AbortablePromiseCache from "abortable-promise-cache";
+import LRU from "quick-lru";
 
 function getMean(data) {
   return (
@@ -16,17 +14,18 @@ function getSD(data) {
     data.reduce(function (sq, n) {
       return sq + (n - m) * (n - m);
     }, 0) /
-      (data.length - 1),
+      (data.length - 1)
   );
 }
 
 define([
-  'dojo/_base/declare',
-  'JBrowse/Store/SeqFeature/VCFTabix',
-  'JBrowse/Model/SimpleFeature',
+  "dojo/_base/declare",
+  "JBrowse/Store/SeqFeature/VCFTabix",
+  "JBrowse/Model/SimpleFeature",
 ], function (declare, VCFTabix, SimpleFeature) {
   return declare(VCFTabix, {
-    constructor() {
+    constructor(args) {
+      console.log(args);
       this.featureCache = new AbortablePromiseCache({
         cache: new LRU({
           maxSize: 20,
@@ -39,7 +38,7 @@ define([
       const samples = parser.samples;
 
       const regularizedReferenceName = this.browser.regularizeReferenceName(
-        query.ref,
+        query.ref
       );
 
       const end = this.browser.view.ref.end;
@@ -53,34 +52,34 @@ define([
 
       let averages = samples.map(() => ({ scores: [] }));
 
-      await this.indexedData.getLines(
-        regularizedReferenceName,
-        0,
-        undefined,
-        (line, fileOffset) => {
-          const fields = line.split('\t');
-          const start = +fields[1];
-          const featureBin = Math.max(Math.floor(start / binSize), 0);
-          bins[featureBin].start = featureBin * binSize;
-          bins[featureBin].end = (featureBin + 1) * binSize;
-          bins[featureBin].id = fileOffset;
-          for (let i = 0; i < samples.length; i++) {
-            const sampleName = samples[i];
-            const score = +fields[9 + i].split(':')[2];
-            averages[i].scores.push(isNaN(score) ? 0 : score);
-            bins[featureBin].samples[i].score += isNaN(score) ? 0 : score;
-            bins[featureBin].samples[i].count++;
-            bins[featureBin].samples[i].source = sampleName;
-          }
-        },
-      );
-      bins.forEach(bin => {
-        bin.samples.forEach((sample, index) => {
-          sample.score =
-            (sample.score / sample.count - getMean(averages[index].scores)) /
-            getSD(averages[index].scores);
-        });
-      });
+      //       await this.indexedData.getLines(
+      //         regularizedReferenceName,
+      //         0,
+      //         undefined,
+      //         (line, fileOffset) => {
+      //           const fields = line.split("\t");
+      //           const start = +fields[1];
+      //           const featureBin = Math.max(Math.floor(start / binSize), 0);
+      //           bins[featureBin].start = featureBin * binSize;
+      //           bins[featureBin].end = (featureBin + 1) * binSize;
+      //           bins[featureBin].id = fileOffset;
+      //           for (let i = 0; i < samples.length; i++) {
+      //             const sampleName = samples[i];
+      //             const score = +fields[9 + i].split(":")[2];
+      //             averages[i].scores.push(isNaN(score) ? 0 : score);
+      //             bins[featureBin].samples[i].score += isNaN(score) ? 0 : score;
+      //             bins[featureBin].samples[i].count++;
+      //             bins[featureBin].samples[i].source = sampleName;
+      //           }
+      //         }
+      //       );
+      //       bins.forEach((bin) => {
+      //         bin.samples.forEach((sample, index) => {
+      //           sample.score =
+      //             (sample.score / sample.count - getMean(averages[index].scores)) /
+      //             getSD(averages[index].scores);
+      //         });
+      //       });
       return bins;
     },
 
@@ -88,20 +87,20 @@ define([
       query,
       featureCallback,
       finishedCallback,
-      errorCallback,
+      errorCallback
     ) {
       try {
         const features = await this.featureCache.get(query.ref, query);
-        features.forEach(feature => {
+        features.forEach((feature) => {
           if (feature.end > query.start && feature.start < query.end) {
-            feature.samples.forEach(sample => {
+            feature.samples.forEach((sample) => {
               featureCallback(
                 new SimpleFeature({
                   data: Object.assign(Object.create(feature), {
                     score: sample.score,
                     source: sample.source,
                   }),
-                }),
+                })
               );
             });
           }
