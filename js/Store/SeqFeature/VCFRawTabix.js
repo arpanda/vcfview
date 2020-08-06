@@ -50,7 +50,7 @@ define([
         });
       }
 
-      let averages = samples.map(() => ({ scores: [] }));
+      // let averages = samples.map(() => ({ scores: [] }));
 
       await this.indexedData.getLines(
         regularizedReferenceName,
@@ -66,21 +66,24 @@ define([
           for (let i = 0; i < samples.length; i++) {
             const sampleName = samples[i];
             const score = +fields[9 + i].split(":")[2];
-            averages[i].scores.push(isNaN(score) ? 0 : score);
+            // averages[i].scores.push(isNaN(score) ? 0 : score);
             bins[featureBin].samples[i].score += isNaN(score) ? 0 : score;
             bins[featureBin].samples[i].count++;
             bins[featureBin].samples[i].source = sampleName;
           }
         }
       );
+      let averages = new Array(samples.length);
+      averages.fill(0);
       bins.forEach((bin) => {
         bin.samples.forEach((sample, index) => {
-          sample.score = sample.score / sample.count;
+          sample.score = sample.score / (sample.count || 1);
+          averages[index] += sample.score;
         });
       });
 
       return {
-        averages: averages.map((average) => getMean(average.scores)),
+        averages: averages.map((average) => average / bins.length),
         bins,
       };
     },
