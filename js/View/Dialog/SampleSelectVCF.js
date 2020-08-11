@@ -20,7 +20,7 @@ define([
   return declare(ActionBarDialog, {
     title: "Set sample name",
 
-    constructor: function (args) {
+    constructor(args) {
       this.sampleList = args.samples;
       this.sample = args.sample || 0;
       this.GenotypeField = args.GenotypeField || "DP";
@@ -33,7 +33,7 @@ define([
       this.cancelCallback = args.cancelCallback || function () {};
     },
 
-    _fillActionBar: function (actionBar) {
+    _fillActionBar(actionBar) {
       new Button({
         label: "OK",
         onClick: dojo.hitch(this, function () {
@@ -54,7 +54,7 @@ define([
       }).placeAt(actionBar);
     },
 
-    show: function (/* callback */) {
+    show() {
       var SelectedSampleChecker = function (selectedSample) {
         return function (sample, index) {
           if (index == selectedSample) {
@@ -114,7 +114,7 @@ define([
       this.inherited(arguments);
     },
 
-    hide: function () {
+    hide() {
       this.inherited(arguments);
       window.setTimeout(dojo.hitch(this, "destroyRecursive"), 500);
     },

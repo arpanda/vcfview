@@ -89,7 +89,7 @@
       "urlTemplate": "inputVcfs/trio.vcf.gz",
       "storeClass": "vcfview/Store/SeqFeature/VCFRawTabix",
       "type": "MultiBigWig/View/Track/MultiWiggle/MultiXYPlot",
-      "label": "trio vcf multibigwig",
+      "label": "MultiBigWig VCF with Z-score bins",
       "chunkSizeLimit": 100000000,
       "max_score": 5,
       "min_score": -5,
@@ -97,6 +97,21 @@
         { "name": "NA12877", "color": "green" },
         { "name": "NA12878", "color": "orange" },
         { "name": "NA12882", "color": "blue" }
+      ]
+    },
+    {
+      "urlTemplate": "inputVcfs/trio.vcf.gz",
+      "storeClass": "vcfview/Store/SeqFeature/VCFPerSample",
+      "type": "vcfview/View/Track/MultiVCF",
+      "label": "Per sample VCF depth with raw bins",
+      "chunkSizeLimit": 100000000,
+      "max_score": 100,
+      "min_score": 0,
+      "urlTemplates": [
+        { "name": "NA12877", "color": "green" },
+        { "name": "NA12878", "color": "orange" },
+        { "name": "NA12882", "color": "blue" },
+        { "name": "average", "color": "black" }
       ]
     }
   ]

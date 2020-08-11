@@ -24,7 +24,8 @@ define([
   "JBrowse/Model/SimpleFeature",
 ], function (declare, VCFTabix, SimpleFeature) {
   return declare(VCFTabix, {
-    constructor() {
+    constructor(args) {
+      this.sample = args.sample || 0;
       this.featureCache = new AbortablePromiseCache({
         cache: new LRU({
           maxSize: 20,
@@ -49,8 +50,6 @@ define([
         });
       }
 
-      let averages = samples.map(() => ({ scores: [] }));
-
       await this.indexedData.getLines(
         regularizedReferenceName,
         0,
@@ -65,23 +64,25 @@ define([
           for (let i = 0; i < samples.length; i++) {
             const sampleName = samples[i];
             const score = +fields[9 + i].split(":")[2];
-            averages[i].scores.push(isNaN(score) ? 0 : score);
             bins[featureBin].samples[i].score += isNaN(score) ? 0 : score;
             bins[featureBin].samples[i].count++;
             bins[featureBin].samples[i].source = sampleName;
           }
         }
       );
-
-      const sds = averages.map((average) => getSD(average.scores));
-      const means = averages.map((average) => getMean(average.scores));
+      let averages = new Array(samples.length);
+      averages.fill(0);
       bins.forEach((bin) => {
         bin.samples.forEach((sample, index) => {
-          sample.score =
-            (sample.score / sample.count - means[index]) / sds[index];
+          sample.score = sample.score / (sample.count || 1);
+          averages[index] += sample.score;
         });
       });
-      return bins;
+
+      return {
+        averages: averages.map((average) => average / bins.length),
+        bins,
+      };
     },
 
     async _getFeatures(
@@ -91,21 +92,35 @@ define([
       errorCallback
     ) {
       try {
-        const features = await this.featureCache.get(query.ref, query);
-        features.forEach((feature) => {
+        const { bins, averages } = await this.featureCache.get(
+          query.ref,
+          query
+        );
+        bins.forEach((feature) => {
           if (feature.end > query.start && feature.start < query.end) {
-            feature.samples.forEach((sample) => {
-              featureCallback(
-                new SimpleFeature({
-                  data: Object.assign(Object.create(feature), {
-                    score: sample.score,
-                    source: sample.source,
-                  }),
-                })
-              );
-            });
+            const sample = feature.samples[this.sample];
+            featureCallback(
+              new SimpleFeature({
+                data: Object.assign(Object.create(feature), {
+                  score: sample.score,
+                  source: sample.source,
+                }),
+              })
+            );
           }
         });
+
+        featureCallback(
+          new SimpleFeature({
+            data: {
+              start: 0,
+              end: this.browser.view.ref.end,
+              score: averages[this.sample],
+              uniqueId: "average_" + this.sample,
+              source: "average",
+            },
+          })
+        );
 
         finishedCallback();
       } catch (e) {
