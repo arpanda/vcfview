@@ -14,7 +14,7 @@ function getSD(data) {
     data.reduce(function (sq, n) {
       return sq + (n - m) * (n - m);
     }, 0) /
-      (data.length - 1)
+      (data.length - 1),
   );
 }
 
@@ -41,7 +41,7 @@ define([
       }
       const text = await result.text();
       const refs = {};
-      text.split("\n").forEach((row) => {
+      text.split("\n").forEach(row => {
         if (row.trim() !== "") {
           const [refName, start, gcContent, gcCount, atCount] = row.split("\t");
           if (!refs[refName]) {
@@ -62,19 +62,17 @@ define([
       const parser = await this.getParser();
       const samples = parser.samples;
       const gc = await this.parseGC();
+      const gcContent = {};
 
       const regularizedReferenceName = this.browser.regularizeReferenceName(
-        query.ref
+        query.ref,
       );
 
-      const end = this.browser.view.ref.end;
       let binSize = 100000;
       var bins = [];
-      for (let i = 0; i < end; i += binSize) {
-        bins.push({
-          samples: samples.map(() => ({ score: 0, count: 0 })),
-        });
-      }
+
+      const refName = query.ref.replace("chr", "");
+      const chrGc = gc[refName];
 
       await this.indexedData.getLines(
         regularizedReferenceName,
@@ -86,30 +84,45 @@ define([
           const format = fields[8].split(":");
           const DP = format.indexOf("DP");
           const featureBin = Math.max(Math.floor(start / binSize), 0);
+          const gcVal = chrGc[featureBin].gcContent;
+          const gcBin = 3 * Math.ceil(gcVal / 3);
+          if (!gcContent[gcBin]) {
+            gcContent[gcBin] = [];
+          }
+          if (!bins[featureBin]) {
+            bins[featureBin] = { score: 0, count: 0 };
+          }
           bins[featureBin].start = featureBin * binSize;
           bins[featureBin].end = (featureBin + 1) * binSize;
           bins[featureBin].id = fileOffset;
-          for (let i = 0; i < samples.length; i++) {
-            const sampleName = samples[i];
-            const score = +fields[9 + i].split(":")[DP];
-            bins[featureBin].samples[i].score += isNaN(score) ? 0 : score;
-            bins[featureBin].samples[i].count++;
-            bins[featureBin].samples[i].source = sampleName;
-          }
-        }
+          const sampleName = samples[this.sample];
+          const score = +fields[9 + this.sample].split(":")[DP];
+          const finalScore = isNaN(score) ? 0 : score;
+          bins[featureBin].score += finalScore;
+          bins[featureBin].count++;
+          bins[featureBin].source = sampleName;
+          gcContent[gcBin].push(finalScore);
+        },
       );
-      let averages = new Array(samples.length);
-      averages.fill(0);
-      bins.forEach((bin) => {
-        bin.samples.forEach((sample, index) => {
-          sample.score = sample.score / (sample.count || 1);
-          averages[index] += sample.score;
-        });
+      let globalAverage = 0;
+      bins.forEach(sample => {
+        globalAverage += sample.score / (sample.count || 1);
       });
-      console.log({ bins });
+      globalAverage /= bins.length;
+
+      bins.forEach(sample => {
+        sample.score = sample.score / (sample.count || 1);
+        const start = sample.start;
+        const featureBin = Math.max(Math.floor(start / binSize), 0);
+        const gcVal = chrGc[featureBin].gcContent;
+        const gcBin = 3 * Math.ceil(gcVal / 3);
+        const bin = gcContent[gcBin];
+        const meanScoreForGcBin = getMean(bin);
+        sample.sample *= globalAverage / meanScoreForGcBin;
+      });
 
       return {
-        averages: averages.map((average) => average / bins.length),
+        average: globalAverage,
         bins,
       };
     },
@@ -118,24 +131,21 @@ define([
       query,
       featureCallback,
       finishedCallback,
-      errorCallback
+      errorCallback,
     ) {
       try {
-        const { bins, averages } = await this.featureCache.get(
-          query.ref,
-          query
-        );
+        const { bins, average } = await this.featureCache.get(query.ref, query);
 
-        bins.forEach((feature) => {
+        bins.forEach(feature => {
           if (feature.end > query.start && feature.start < query.end) {
-            const sample = feature.samples[this.sample];
+            const sample = feature;
             featureCallback(
               new SimpleFeature({
                 data: Object.assign(Object.create(feature), {
                   score: sample.score,
                   source: sample.source,
                 }),
-              })
+              }),
             );
           }
         });
@@ -145,11 +155,11 @@ define([
             data: {
               start: 0,
               end: this.browser.view.ref.end,
-              score: averages[this.sample],
+              score: average,
               uniqueId: "average_" + this.sample,
               source: "average",
             },
-          })
+          }),
         );
 
         finishedCallback();
