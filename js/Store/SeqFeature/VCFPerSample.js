@@ -118,7 +118,7 @@ define([
         const gcBin = 3 * Math.ceil(gcVal / 3);
         const bin = gcContent[gcBin];
         const meanScoreForGcBin = getMean(bin);
-        sample.sample *= globalAverage / meanScoreForGcBin;
+        sample.score *= globalAverage / meanScoreForGcBin;
       });
 
       return {
