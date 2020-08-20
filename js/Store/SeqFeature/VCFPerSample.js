@@ -33,9 +33,35 @@ define([
         fill: this._readChunk.bind(this),
       });
     },
+
+    async parseGC() {
+      const result = await fetch(this.resolveUrl(this.config.gcContent));
+      if (!result.ok) {
+        throw new Error("no gc content specified");
+      }
+      const text = await result.text();
+      const refs = {};
+      text.split("\n").forEach((row) => {
+        if (row.trim() !== "") {
+          const [refName, start, gcContent, gcCount, atCount] = row.split("\t");
+          if (!refs[refName]) {
+            refs[refName] = [];
+          }
+          refs[refName].push({
+            start: +start,
+            gcContent: +gcContent,
+            gcCount: +gcCount,
+            atCount: +atCount,
+          });
+        }
+      });
+      console.log({ refs });
+      return refs;
+    },
     async _readChunk(query) {
       const parser = await this.getParser();
       const samples = parser.samples;
+      const gc = await this.parseGC();
 
       const regularizedReferenceName = this.browser.regularizeReferenceName(
         query.ref
@@ -57,13 +83,15 @@ define([
         (line, fileOffset) => {
           const fields = line.split("\t");
           const start = +fields[1];
+          const format = fields[8].split(":");
+          const DP = format.indexOf("DP");
           const featureBin = Math.max(Math.floor(start / binSize), 0);
           bins[featureBin].start = featureBin * binSize;
           bins[featureBin].end = (featureBin + 1) * binSize;
           bins[featureBin].id = fileOffset;
           for (let i = 0; i < samples.length; i++) {
             const sampleName = samples[i];
-            const score = +fields[9 + i].split(":")[2];
+            const score = +fields[9 + i].split(":")[DP];
             bins[featureBin].samples[i].score += isNaN(score) ? 0 : score;
             bins[featureBin].samples[i].count++;
             bins[featureBin].samples[i].source = sampleName;
@@ -78,6 +106,7 @@ define([
           averages[index] += sample.score;
         });
       });
+      console.log({ bins });
 
       return {
         averages: averages.map((average) => average / bins.length),
@@ -96,6 +125,7 @@ define([
           query.ref,
           query
         );
+
         bins.forEach((feature) => {
           if (feature.end > query.start && feature.start < query.end) {
             const sample = feature.samples[this.sample];
