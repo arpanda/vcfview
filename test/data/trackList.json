@@ -113,6 +113,19 @@
         { "name": "NA12882", "color": "blue" },
         { "name": "average", "color": "black" }
       ]
+    },
+    {
+      "urlTemplate": "inputVcfs/NA12878.vcf.gz",
+      "storeClass": "vcfview/Store/SeqFeature/VCFPerSample",
+      "type": "vcfview/View/Track/MultiVCF",
+      "label": "NA12878 VCF depth with raw bins",
+      "chunkSizeLimit": 100000000,
+      "max_score": 100,
+      "min_score": 0,
+      "urlTemplates": [
+        { "name": "NA12878", "color": "green" },
+        { "name": "average", "color": "black" }
+      ]
     }
   ]
 }
