@@ -14,7 +14,7 @@ function getSD(data) {
     data.reduce(function (sq, n) {
       return sq + (n - m) * (n - m);
     }, 0) /
-      (data.length - 1),
+      (data.length - 1)
   );
 }
 
@@ -37,7 +37,7 @@ define([
       const samples = parser.samples;
 
       const regularizedReferenceName = this.browser.regularizeReferenceName(
-        query.ref,
+        query.ref
       );
 
       const end = this.browser.view.ref.end;
@@ -70,12 +70,12 @@ define([
             bins[featureBin].samples[i].count++;
             bins[featureBin].samples[i].source = sampleName;
           }
-        },
+        }
       );
 
-      const sds = averages.map(average => getSD(average.scores));
-      const means = averages.map(average => getMean(average.scores));
-      bins.forEach(bin => {
+      const sds = averages.map((average) => getSD(average.scores));
+      const means = averages.map((average) => getMean(average.scores));
+      bins.forEach((bin) => {
         bin.samples.forEach((sample, index) => {
           sample.score =
             (sample.score / sample.count - means[index]) / sds[index];
@@ -88,20 +88,20 @@ define([
       query,
       featureCallback,
       finishedCallback,
-      errorCallback,
+      errorCallback
     ) {
       try {
         const features = await this.featureCache.get(query.ref, query);
-        features.forEach(feature => {
+        features.forEach((feature) => {
           if (feature.end > query.start && feature.start < query.end) {
-            feature.samples.forEach(sample => {
+            feature.samples.forEach((sample) => {
               featureCallback(
                 new SimpleFeature({
                   data: Object.assign(Object.create(feature), {
                     score: sample.score,
                     source: sample.source,
                   }),
-                }),
+                })
               );
             });
           }
