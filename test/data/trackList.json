@@ -127,6 +127,20 @@
         { "name": "NA12878", "color": "green" },
         { "name": "average", "color": "black" }
       ]
+    },
+      {
+      "urlTemplate": "inputVcfs/HepG2.vcf.gz",
+      "storeClass": "vcfview/Store/SeqFeature/VCFPerSample",
+      "type": "vcfview/View/Track/MultiVCF",
+      "label": "HapG2 VCF",
+      "chunkSizeLimit": 100000000,
+      "max_score": 100,
+      "min_score": 0,
+      "gcContent": "hg19.100000.gc",
+      "urlTemplates": [
+        { "name": "HepG2", "color": "green" },
+        { "name": "average", "color": "black" }
+      ]
     }
   ]
 }

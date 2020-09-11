@@ -1,0 +1,11 @@
+{
+  "name": "vcfview",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/arpanda/vcfview.git",
+  "author": "arpanda <arijpanda@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "ttest": "^3.0.0"
+  }
+}
