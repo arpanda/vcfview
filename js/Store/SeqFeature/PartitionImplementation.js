@@ -1,7 +1,8 @@
 import AbortablePromiseCache from "abortable-promise-cache";
 import LRU from "quick-lru";
-const jstat = require('jstat');
 
+const jstat = require('jstat');
+/*
 
 class DataStat{
     constructor(data_array){
@@ -227,6 +228,7 @@ class Partition{
         return levels;
     }
 }
+*/
 
 function getMean(data) {
   return (
