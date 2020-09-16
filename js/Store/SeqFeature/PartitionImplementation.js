@@ -1,6 +1,6 @@
 import AbortablePromiseCache from "abortable-promise-cache";
 import LRU from "quick-lru";
-import ttest from 'ttest';
+const jstat = require('jstat');
 
 
 class DataStat{
@@ -13,6 +13,24 @@ class DataStat{
     }
 }
 
+function t_test_1_sample(mean, m, s, n){
+    if(s == 0) s = 1;
+    t = (mean - m) / s * Math.sqrt(n);
+    p = 1.0 - jstat.studentt.cdf(Math.abs(t), df=n - 1);
+    return p;
+}
+
+
+function t_test_2_samples(m1, s1, n1, m2, s2, n2){
+    if(s1 == 0) s1 = 1;
+    if(s2 == 0) s2 = 1;
+    t = (m1 - m2) / Math.sqrt(s1 ** 2 / n1 + s2 ** 2 / n2)
+    df = (s1 ** 2 / n1 + s2 ** 2 / n2) ** 2 * (n1 - 1) * (n2 - 1) / (
+            s1 ** 4 * (n2 - 1) / n1 ** 2 + s2 ** 4 * (n1 - 1) / n2 ** 2)
+    p = 1.0 - jstat.studentt.cdf(Math.abs(t), df=int(df + 0.5))
+    return p
+}
+
 class Partition{
     constructor(rd){
         this.rd = rd;
@@ -21,7 +39,6 @@ class Partition{
             rd.reduce((acc, n) => (n - this.mean) ** 2) / rd.length
           );
         this.bin_band = [2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 16, 20, 24, 28, 32, 40, 48, 56, 64, 80, 96, 112, 128];
-        //this.bin_band = [2, 3, 4, 5];
     }
     get_rd_signal_bandwidth(data_array){
         var new_array = [];
@@ -51,7 +68,6 @@ class Partition{
                 levels[b] = this.rd[b];
             }
         }
-        //console.log(levels);
 
         this.bin_band.forEach((bin_band, bin_band_index) => {
 
@@ -162,7 +178,7 @@ class Partition{
                 var n_left = seg_left[1] - seg_left[0];
                 var n_right = seg_right[1] - seg_right[0];
                 if (n<=1) continue;
-                var seg_array = levels.slice(seg[0], seg[1])
+                var seg_array = new DataStat(levels.slice(seg[0], seg[1]));
                 //seg_mean = seg_array.reduce((acc, n) => acc + n)/seg_array.length;
                 //seg_std = Math.sqrt(seg_array.reduce((acc, n) => (n - seg_mean) ** 2) / seg_array.length);
 
@@ -178,36 +194,32 @@ class Partition{
                     }
                 }else{
                     var seg_left_array = levels.slice(seg_left[0], seg_left[1]);
-                    //seg_left_1 = new DataStat(seg_left_array);
-                    //seg_left_mean = seg_left_1.mean;
-                    //seg_left_std = seg_left_1.std;
+                    var seg_left_1 = new DataStat(seg_left_array);
 
                     var seg_right_array = levels.slice(seg_right[0], seg_right[1]);
-                    //seg_right_1 = new DataStat(seg_right_array);
-                    //seg_right_mean = seg_right_1.mean;
-                    //seg_right_std = seg_right_1.std;
+                    var seg_right_1 = new DataStat(seg_right_array);
 
-                    var ttest_2sample_1 = ttest(seg_array, seg_left_array);
-                    if (ttest_2sample_1.pvalue > (0.01/genome_size* bin_size * (n+n_left))){
+                    var ttest_2sample_1 = t_test_2_samples(seg_array.mean, seg_array.std, seg_array.length, seg_left_1.mean, seg_left_1.std, seg_left_1.length);
+                    if (ttest_2sample_1 > (0.01/genome_size* bin_size * (n+n_left))){
                         continue
                     }
 
-                    var ttest_2sample_2 = ttest(seg_array, seg_right_array);
-                    if (ttest_2sample_2.pvalue > (0.01/genome_size* bin_size * (n+n_right))){
+                    // var ttest_2sample_2 = ttest(seg_array, seg_right_array);
+                    var ttest_2sample_2 = t_test_2_samples(seg_array.mean, seg_array.std, seg_array.length, seg_right_1.mean, seg_right_1.std, seg_right_1.length);
+                    if (ttest_2sample_2 > (0.01/genome_size* bin_size * (n+n_right))){
                         continue
                     }
                 }
-                var ttest_1sample_1 = ttest(seg_array);
-                if(ttest_1sample_1.pvalue > 0.05){
+                //var ttest_1sample_1 = ttest(seg_array);
+                var ttest_1sample_1 = t_test_1_sample(this.mean, seg_array.mean, seg_array.std, seg_array.length);
+                if(ttest_1sample_1 > 0.05){
                     continue
                 }
-                var raw_seg_data = this.rd.slice(seg[0], seg[1]);
-                var raw_seg_data_1 = new DataStat(raw_seg_data);
+                var raw_seg_data = new DataStat(this.rd.slice(seg[0], seg[1]));
 
                 for(var i=seg[0]; i<=seg[1]; i++){
-                    //console.log('t1', i);
                     masked[i]=true;
-                    levels[i] = raw_seg_data_1.mean;
+                    levels[i] = raw_seg_data.mean;
                 }
             }
 
