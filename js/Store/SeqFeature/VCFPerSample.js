@@ -1,5 +1,6 @@
 import AbortablePromiseCache from "abortable-promise-cache";
 import LRU from "quick-lru";
+import { unzip } from "@gmod/bgzf-filehandle";
 
 function getMean(data) {
   return (
@@ -18,6 +19,10 @@ function getSD(data) {
   );
 }
 
+const globalCache = new LRU({
+  maxSize: 20,
+});
+
 define([
   "dojo/_base/declare",
   "JBrowse/Store/SeqFeature/VCFTabix",
@@ -34,6 +39,24 @@ define([
       });
     },
 
+    async getAvgAndSD(blob, sample) {
+      const results = await blob.readFile("utf8");
+      const textDecoder = new TextDecoder("utf-8");
+      const buffer = await unzip(results);
+      const lines = textDecoder.decode(buffer);
+      let scores = [];
+      lines.split("\n").forEach(line => {
+        if (line.startsWith("#") || line == "") {
+          return;
+        }
+        const fields = line.split("\t");
+        const format = fields[8].split(":");
+        const DP = format.indexOf("DP");
+        const score = +fields[9 + sample].split(":")[DP];
+        scores.push(score);
+      });
+      return { mean: getMean(scores), sd: getSD(scores) };
+    },
     async parseGC() {
       const result = await fetch(this.resolveUrl(this.config.gcContent));
       if (!result.ok) {
@@ -63,6 +86,18 @@ define([
       const samples = parser.samples;
       const gc = await this.parseGC();
       const gcContent = {};
+
+      let globalAverage;
+      if (globalCache.has(`${this.fileBlob}`)) {
+        const { mean, sd } = globalCache.get(`${this.fileBlob}`);
+        console.log("using precalculated global mean,sd", mean);
+        globalAverage = mean;
+      } else {
+        const { mean, sd } = await this.getAvgAndSD(this.fileBlob, this.sample);
+        globalCache.set(`${this.fileBlob}`, { mean, sd });
+        console.log("calculated global chr mean,sd", mean);
+        globalAverage = mean;
+      }
 
       const regularizedReferenceName = this.browser.regularizeReferenceName(
         query.ref,
@@ -104,11 +139,11 @@ define([
           gcContent[gcBin].push(finalScore);
         },
       );
-      let globalAverage = 0;
-      bins.forEach(sample => {
-        globalAverage += sample.score / (sample.count || 1);
-      });
-      globalAverage /= bins.length;
+      // let globalAverage = 0;
+      // bins.forEach(sample => {
+      //   globalAverage += sample.score / (sample.count || 1);
+      // });
+      // globalAverage /= bins.length;
 
       bins.forEach(sample => {
         sample.score = sample.score / (sample.count || 1);
@@ -121,10 +156,12 @@ define([
         sample.score *= globalAverage / meanScoreForGcBin;
       });
 
-      return {
+      const results = {
         average: globalAverage,
         bins,
       };
+      // globalCache.set(`${this.fileBlob}`, results);
+      return results;
     },
 
     async _getFeatures(
