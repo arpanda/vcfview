@@ -1,7 +1,6 @@
 import AbortablePromiseCache from "abortable-promise-cache";
 import LRU from "quick-lru";
 
-const jstat = require('jstat');
 /*
 
 class DataStat{
