@@ -5,7 +5,7 @@
     script.onload = function(){
         // remote script has loaded
     };
-    script.src = 'cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js';
+    script.src = 'https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js';
     d.getElementsByTagName('head')[0].appendChild(script);
 }(document));
 
