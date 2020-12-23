@@ -5,13 +5,12 @@
   script.onload = function () {
     // remote script has loaded
   };
-  //script.src = 'https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js';
-  //d.getElementsByTagName('head')[0].appendChild(script);
+  script.src = "https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js";
+  d.getElementsByTagName("head")[0].appendChild(script);
 })(document);
 
 define([
   "dojo/_base/declare",
-  "dojo/dom",
   "JBrowse/Plugin",
   "./View/Dialog/cnvpytor",
   "dijit/MenuItem",
@@ -19,7 +18,6 @@ define([
   "dojo/dom-construct",
 ], function (
   declare,
-  dom,
   JBrowsePlugin,
   LocationChoiceDialog,
   MenuItem,
@@ -51,16 +49,14 @@ define([
         type: "vcfview_cp/View/Track/SegmentationAutoMultiTrack",
       });
 
-      var thisB = this;
       this.browser.addGlobalMenuItem(
         "tools",
         new MenuItem({
           id: "menubar_cnvpytor",
           label: "CNVpytor",
-          onClick: function () {
+          onClick: () => {
             new LocationChoiceDialog({
-              browser: thisB.browser,
-              locationList: [],
+              browser: this.browser,
               title: "CNVPytor import",
               prompt: "CNVPytor import",
             }).show();
@@ -68,18 +64,18 @@ define([
         }),
       );
 
-      setTimeout(function () {
+      setTimeout(() => {
         if (!registry.byId("dropdownmenu_tools")) {
-          thisB.browser.renderGlobalMenu(
+          this.browser.renderGlobalMenu(
             "tools",
             { text: "Tools" },
-            thisB.browser.menuBar,
+            this.browser.menuBar,
           );
           var toolsMenu = registry.byId("dropdownbutton_tools");
           var helpMenu = registry.byId("dropdownbutton_help");
           domConstruct.place(toolsMenu.domNode, helpMenu.domNode, "before");
         }
-      }, 200);
+      }, 500);
     },
   });
 });
