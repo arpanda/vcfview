@@ -12,134 +12,37 @@
       "type": "SequenceTrack",
       "urlTemplate": "seq/refSeqs.json"
     },
+
     {
-      "storeClass": "vcfview/Store/SeqFeature/vcfview",
-      "key": "Example type 1",
-      "label": "test",
-      "urlTemplate": "inputVcfs/trio.vcf.gz",
-      "type1": "JBrowse/View/Track/HTMLVariants",
-      "type": "JBrowse/View/Track/Wiggle/XYPlot",
-      "autoscale": "local"
-    },
-    {
-      "storeClass": "vcfview/Store/SeqFeature/SegmentationMultiValue",
-      "key": "Example type 2",
-      "label": "test2",
-      "urlTemplate": "inputVcfs/trio.vcf.gz",
-      "type": "JBrowse/View/Track/Wiggle/XYPlot",
-      "autoscale": "local"
-    },
-    {
-      "storeClass": "JBrowse/Store/SeqFeature/VCFTabix",
-      "showTooltips": true,
-      "showLabels": true,
-      "clickTooltips": true,
-      "key": "Segmentation Advanced",
-      "label": "LGG 3",
-      "type": "vcfview/View/Track/SegmentationAutoTrack",
-      "urlTemplate": "inputVcfs/trio.vcf.gz",
-      "noFill": true,
-      "dpField": ["DP"],
-      "adField": ["AD"],
-      "autoscale": "local",
-      "binSize": 100000
-    },
-    {
-      "storeClass": "vcfview/Store/SeqFeature/SegmentationMultiValue",
-      "urlTemplate": "inputVcfs/trio.vcf.gz",
-      "showTooltips": true,
-      "showLabels": true,
-      "clickTooltips": true,
-      "key": "Segmentation MultiBigWig",
-      "label": "LGG 4",
-      "type": "vcfview/View/Track/SegmentationAutoMultiTrack",
-      "urlTemplates": [
-        { "name": "main", "color": "green" },
-        { "name": "secondary", "color": "purple" }
-      ],
-      "max_score": 100,
-      "noFill": true,
-      "binSize": 1000000,
-      "dpField": ["DP"],
-      "adField": ["AD"],
-      "autoscale": "local",
-      "chunkSizeLimit": 100000000
-    },
-    {
-      "urlTemplate": "inputVcfs/trio.vcf.gz",
-      "label": "trio vcf"
-    },
-    {
-      "urlTemplate": "inputVcfs/trio.vcf.gz",
-      "storeClass": "vcfview/Store/SeqFeature/VCFRawTabix",
-      "type": "JBrowse/View/Track/Wiggle/XYPlot",
-      "label": "trio vcf raw DP parser",
-      "chunkSizeLimit": 100000000,
-      "max_score": 100
-    },
-    {
-      "urlTemplate": "inputVcfs/trio.vcf.gz",
-      "storeClass": "vcfview/Store/SeqFeature/VCFExtra",
-      "type": "JBrowse/View/Track/Wiggle/XYPlot",
-      "label": "trio vcf normal DP parser",
-      "chunkSizeLimit": 100000000,
-      "max_score": 100
-    },
-    {
-      "urlTemplate": "inputVcfs/trio.vcf.gz",
-      "storeClass": "vcfview/Store/SeqFeature/VCFRawTabix",
-      "type": "MultiBigWig/View/Track/MultiWiggle/MultiXYPlot",
-      "label": "MultiBigWig VCF with Z-score bins",
-      "chunkSizeLimit": 100000000,
-      "max_score": 5,
-      "min_score": -5,
-      "urlTemplates": [
-        { "name": "NA12877", "color": "green" },
-        { "name": "NA12878", "color": "orange" },
-        { "name": "NA12882", "color": "blue" }
-      ]
-    },
-    {
-      "urlTemplate": "inputVcfs/trio.vcf.gz",
-      "storeClass": "vcfview/Store/SeqFeature/VCFPerSample",
-      "type": "vcfview/View/Track/MultiVCF",
-      "label": "Per sample VCF depth with raw bins",
-      "chunkSizeLimit": 100000000,
-      "max_score": 100,
-      "min_score": 0,
-      "urlTemplates": [
-        { "name": "NA12877", "color": "green" },
-        { "name": "NA12878", "color": "orange" },
-        { "name": "NA12882", "color": "blue" },
-        { "name": "average", "color": "black" }
-      ]
-    },
-    {
-      "urlTemplate": "inputVcfs/NA12878.vcf.gz",
-      "storeClass": "vcfview/Store/SeqFeature/VCFPerSample",
-      "type": "vcfview/View/Track/MultiVCF",
-      "label": "NA12878 VCF depth with raw bins",
-      "chunkSizeLimit": 100000000,
-      "max_score": 100,
-      "min_score": 0,
-      "gcContent": "hg19.100000.gc",
-      "urlTemplates": [
-        { "name": "NA12878", "color": "green" },
-        { "name": "average", "color": "black" }
-      ]
-    },
-      {
       "urlTemplate": "inputVcfs/HepG2.vcf.gz",
-      "storeClass": "vcfview/Store/SeqFeature/VCFPerSample",
-      "type": "vcfview/View/Track/MultiVCF",
-      "label": "HapG2 VCF",
+      "storeClass": "vcfview/Store/SeqFeature/segmentation_complete",
+      "type": "MultiBigWig/View/Track/MultiWiggle/MultiXYPlot",
+      "label": "HepG2 Multiline with GC(complete)",
       "chunkSizeLimit": 100000000,
-      "max_score": 100,
-      "min_score": 0,
+      "autoscale": "local",
+      "noFill": true,
       "gcContent": "hg19.100000.gc",
       "urlTemplates": [
-        { "name": "HepG2", "color": "green" },
-        { "name": "average", "color": "black" }
+        { "name": "HepG2", "color": "grey" },
+        { "name": "HepG2_GC", "color": "black" },
+        { "name": "HepG2_meanshift", "color": "red" },
+        { "name": "HepG2_call", "color": "green" }
+      ]
+    },
+    {
+      "urlTemplate": "inputVcfs/HepG2.vcf.gz",
+      "storeClass": "vcfview/Store/SeqFeature/BAFview",
+      "type1": "JBrowse/View/Track/Wiggle/XYPlot",
+      "type": "MultiBigWig/View/Track/MultiWiggle/MultiXYPlot",
+      "label": "BAF view",
+      "chunkSizeLimit": 100000000,
+      "max_score": 1,
+      "noFill": true,
+      "GenotypeField": "AD",
+      "urlTemplates": [
+        { "name": "HepG2", "color": "red", "nonCont": true },
+        { "name": "HepG2_BAF", "color": "blue", "nonCont": true},
+        { "name": "HepG2_MIN", "color": "red", "nonCont": true}
       ]
     }
   ]
