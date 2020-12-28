@@ -12,7 +12,7 @@
 define([
   "dojo/_base/declare",
   "JBrowse/Plugin",
-  "./View/Dialog/cnvpytor",
+  "./View/Dialog/cnvpytor_rd_baf",
   "dijit/MenuItem",
   "dijit/registry",
   "dojo/dom-construct",
@@ -52,14 +52,29 @@ define([
       this.browser.addGlobalMenuItem(
         "tools",
         new MenuItem({
-          id: "menubar_cnvpytor",
-          label: "CNVpytor",
+          id: "menubar_cnvpytor_rd",
+          label: "CNVpytor Read Depth analysis",
           onClick: () => {
             new LocationChoiceDialog({
               browser: this.browser,
-              title: "CNVPytor import",
-              prompt: "CNVPytor import",
+              title: "CNVpytor read depth analysis import",
+              prompt: "CNVpytor read depth analysis import",
             }).show();
+          },
+        }),
+      );
+
+      this.browser.addGlobalMenuItem(
+        "tools",
+        new MenuItem({
+          id: "menubar_cnvpytor_baf",
+          label: "CNVpytor BAF analysis",
+          onClick: () => {
+            new LocationChoiceDialog({
+              browser: this.browser,
+              title: "CNVpytor BAF analysis import",
+              prompt: "CNVpytor BAF analysis import",
+            }).show_baf();
           },
         }),
       );

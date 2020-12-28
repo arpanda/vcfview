@@ -32,7 +32,7 @@ define([
     show: function () {
       var dialog = (this.dialog = new Dialog({
         title: this.title,
-        className: "locationChoiceDialog",
+        className: "cnvpytorBAF",
         style: { width: "50%" },
       }));
       var container = dom.create("div", {});
