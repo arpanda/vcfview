@@ -1,5 +1,9 @@
 let i = 0;
 
+const { TabixIndexedFile } = require("@gmod/tabix");
+
+const VCF = require("@gmod/vcf");
+
 define([
   "dojo/_base/declare",
   "dojo/dom-construct",
@@ -7,8 +11,11 @@ define([
   "dijit/Dialog",
   "dijit/form/Button",
   "dijit/form/TextBox",
+  "dijit/form/Select",
   "dijit/focus",
   "JBrowse/Model/FileBlob",
+  "JBrowse/Model/XHRBlob",
+  "JBrowse/Model/BlobFilehandleWrapper",
 ], function (
   declare,
   dom,
@@ -16,8 +23,11 @@ define([
   Dialog,
   Button,
   TextBox,
+  Select,
   dijitFocus,
   FileBlob,
+  XHRBlob,
+  BlobFilehandleWrapper,
 ) {
   return declare(null, {
     constructor: function (args) {
@@ -193,6 +203,55 @@ define([
         { style: { padding: "20px" } },
         container,
       );
+
+      const flex = dojo.create(
+        "div",
+        { style: { display: "flex", border: "1px solid black" } },
+        subcontainer,
+      );
+      const panel1 = dojo.create("div", { style: { padding: "10px" } }, flex);
+      dojo.create(
+        "p",
+        { innerHTML: "Option 1: URL for a VCF.gz file (tabixed VCF)" },
+        panel1,
+      );
+
+      var searchBox = new TextBox().placeAt(panel1);
+
+      const panel2 = dojo.create("div", { style: { padding: "10px" } }, flex);
+      dojo.create(
+        "p",
+        {
+          innerHTML:
+            "Option 2: Open VCF.gz and VCF.gz.tbi file from local computer",
+        },
+        panel2,
+      );
+      var fileBox = dojo.create(
+        "input",
+        { type: "file", multiple: "multiple" },
+        panel2,
+      );
+
+      this.sampleIndex = sampleIndex;
+      this.searchBox = searchBox;
+      this.fileBox = fileBox;
+
+      dojo.create(
+        "p",
+        { innerHTML: "Reference genome name (used to calibrate GC)" },
+        subcontainer,
+      );
+
+      new Select({
+        name: "reference_name",
+        options: ["hg19", "hg38"].map((sample, index) => ({
+          label: sample,
+          value: sample,
+          selected: index === 0,
+        })),
+      }).placeAt(subcontainer);
+
       dojo.create(
         "p",
         { innerHTML: "Index for the sample in the VCF (if multi-sample VCF)" },
@@ -200,40 +259,64 @@ define([
       );
       var sampleIndex = new TextBox({ value: 0 }).placeAt(subcontainer);
 
-      dojo.create(
-        "p",
-        { innerHTML: "Option 1: URL for a VCF.gz file (tabixed VCF)" },
-        subcontainer,
-      );
+      new Button({
+        label: "Load samples from VCF",
+        onClick: async () => {
+          let tabixFile;
+          if (this.searchBox.value) {
+            tabixFile = new TabixIndexedFile({
+              filehandle: new XHRBlob(this.searchBox.value, {
+                expectRanges: true,
+              }),
+              tbiFilehandle: new XHRBlob(this.searchBox.value + ".tbi", {
+                expectRanges: true,
+              }),
+            });
+          } else if (this.fileBox.files.length) {
+            let tbi = 0;
+            let vcf = 0;
+            for (let i = 0; i < this.fileBox.files.length; i++) {
+              const file = this.fileBox.files[i];
+              console.log({ file });
+              if (file.name.endsWith("tbi")) {
+                tbi = i;
+              }
+              if (file.name.endsWith("gz")) {
+                vcf = i;
+              }
+            }
+            tabixFile = new TabixIndexedFile({
+              filehandle: new BlobFilehandleWrapper(
+                new FileBlob(this.fileBox.files[vcf]),
+              ),
+              tbiFilehandle: new BlobFilehandleWrapper(
+                new FileBlob(this.fileBox.files[tbi]),
+              ),
+            });
+          }
 
-      var searchBox = new TextBox().placeAt(subcontainer);
-
-      dojo.create(
-        "p",
-        {
-          innerHTML:
-            "Option 2: Open VCF.gz and VCF.gz.tbi file from local computer",
+          if (tabixFile) {
+            let vcfParser = new VCF({ header: await tabixFile.getHeader() });
+            new Select({
+              name: "select2",
+              options: vcfParser.samples.map((sample, index) => ({
+                label: sample,
+                value: sample,
+                selected: index === 0,
+              })),
+            }).placeAt(subcontainer);
+          }
         },
-        subcontainer,
-      );
-      var fileBox = dojo.create(
-        "input",
-        { type: "file", multiple: "multiple" },
-        subcontainer,
-      );
-
-      this.sampleIndex = sampleIndex;
-      this.searchBox = searchBox;
-      this.fileBox = fileBox;
+      }).placeAt(subcontainer);
 
       this.actionBar = dojo.create("div", {
         className: "infoDialogActionBar dijitDialogPaneActionBar",
       });
 
       const urlTemplates = [
-        { "name": "HepG2", "color": "red", "nonCont": true },
-        { "name": "HepG2_BAF", "color": "blue", "nonCont": true},
-        { "name": "HepG2_MIN", "color": "red", "nonCont": true}
+        { name: "HepG2", color: "red", nonCont: true },
+        { name: "HepG2_BAF", color: "blue", nonCont: true },
+        { name: "HepG2_MIN", color: "red", nonCont: true },
       ];
       new Button({
         label: "Submit",
@@ -258,7 +341,6 @@ define([
 
           // else if they use the local file, use the fileBox
           else if (this.fileBox.files.length) {
-            console.log(this.fileBox.files);
             let tbi = 0;
             let vcf = 0;
             for (let i = 0; i < this.fileBox.files.length; i++) {
@@ -329,6 +411,5 @@ define([
         }),
       );
     },
-
   });
 });
