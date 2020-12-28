@@ -328,6 +328,11 @@ define([
             ? +this.sampleSelectBox.value
             : +this.sampleIndex.value || 0;
 
+          const sampleName = this.sampleSelectBox
+            ? this.sampleSelectBox.options[this.sampleSelectBox.value].label
+            : "" + this.sampleIndex.value;
+          //const sampleName = this.sampleSelectBox.value
+
           // if they passed a URL, use the search box
           if (this.searchBox.value) {
             var storeConf = {
@@ -375,7 +380,7 @@ define([
           var searchTrackConfig = {
             type: "MultiBigWig/View/Track/MultiWiggle/MultiXYPlot",
             label: "search_track_" + i++,
-            key: "Testing",
+            key: sampleName + " BAF",
             store: storeName,
             urlTemplates,
           };
