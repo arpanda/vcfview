@@ -118,12 +118,10 @@ define([
 
           // else if they use the local file, use the fileBox
           else if (this.fileBox.files.length) {
-            console.log(this.fileBox.files);
             let tbi = 0;
             let vcf = 0;
             for (let i = 0; i < this.fileBox.files.length; i++) {
               const file = this.fileBox.files[i];
-              console.log({ file });
               if (file.name.endsWith("tbi")) {
                 tbi = i;
               }
@@ -277,7 +275,6 @@ define([
             let vcf = 0;
             for (let i = 0; i < this.fileBox.files.length; i++) {
               const file = this.fileBox.files[i];
-              console.log({ file });
               if (file.name.endsWith("tbi")) {
                 tbi = i;
               }
@@ -297,11 +294,11 @@ define([
 
           if (tabixFile) {
             let vcfParser = new VCF({ header: await tabixFile.getHeader() });
-            new Select({
+            this.sampleSelectBox = new Select({
               name: "select2",
               options: vcfParser.samples.map((sample, index) => ({
                 label: sample,
-                value: sample,
+                value: index,
                 selected: index === 0,
               })),
             }).placeAt(subcontainer);
@@ -313,10 +310,12 @@ define([
         className: "infoDialogActionBar dijitDialogPaneActionBar",
       });
 
+      // these names correspond with the SimpleFeature source field in
+      // Store/SeqFeature/BAFview.js
       const urlTemplates = [
-        { name: "HepG2", color: "red", nonCont: true },
-        { name: "HepG2_BAF", color: "blue", nonCont: true },
-        { name: "HepG2_MIN", color: "red", nonCont: true },
+        { name: "sample", color: "red", nonCont: true },
+        { name: "sample_BAF", color: "blue", nonCont: true },
+        { name: "sample_MIN", color: "red", nonCont: true },
       ];
       new Button({
         label: "Submit",
@@ -325,12 +324,16 @@ define([
             this.browser.config.dataRoot + "/" + "hg19.100000.gc",
           );
 
+          const sampleIndex = this.sampleSelectBox
+            ? +this.sampleSelectBox.value
+            : +this.sampleIndex.value || 0;
+
           // if they passed a URL, use the search box
           if (this.searchBox.value) {
             var storeConf = {
               browser: this.browser,
               refSeq: this.browser.refSeq,
-              sample: +this.sampleIndex.value || 0,
+              sample: sampleIndex,
               type: "vcfview/Store/SeqFeature/BAFview",
               gcContent: conf,
               chunkSizeLimit: 100000000,
@@ -345,7 +348,6 @@ define([
             let vcf = 0;
             for (let i = 0; i < this.fileBox.files.length; i++) {
               const file = this.fileBox.files[i];
-              console.log({ file });
               if (file.name.endsWith("tbi")) {
                 tbi = i;
               }
@@ -356,7 +358,7 @@ define([
             var storeConf = {
               browser: this.browser,
               refSeq: this.browser.refSeq,
-              sample: +this.sampleIndex.value || 0,
+              sample: sampleIndex,
               type: "vcfview/Store/SeqFeature/BAFview",
               gcContent: conf,
               chunkSizeLimit: 100000000,
