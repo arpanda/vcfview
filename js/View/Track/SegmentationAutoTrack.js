@@ -13,7 +13,7 @@ define([
   XYPlot,
   SegmentationMultiBin,
   SampleSelectVCF,
-  Util
+  Util,
 ) {
   return declare(XYPlot, {
     constructor(args) {
@@ -22,7 +22,7 @@ define([
           store: this.store,
           config: this.config,
           browser: this.browser,
-        })
+        }),
       );
     },
     makeTrackLabel: function () {

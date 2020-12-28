@@ -15,7 +15,7 @@ define([
   NumberSpinner,
   Select,
   Button,
-  ActionBarDialog
+  ActionBarDialog,
 ) {
   return declare(ActionBarDialog, {
     title: "Set sample name",
@@ -81,14 +81,14 @@ define([
         name: "sample_select",
         // options: this.sampleList.map((sample, index) => ({ label: sample, value: index })) ,
         options: this.sampleList.map(
-          SelectedSampleChecker(this.SelectedSample)
+          SelectedSampleChecker(this.SelectedSample),
         ),
       });
 
       this.GenotypeFieldSelect = new Select({
         name: "genotype_field",
         options: ["DP", "AD"].map(
-          SelectedGenotypeChecker(this.SelectedGenotype)
+          SelectedGenotypeChecker(this.SelectedGenotype),
         ),
       });
 

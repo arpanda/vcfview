@@ -17,11 +17,11 @@ define([
       query,
       featureCallback,
       finishCallback,
-      errorCallback
+      errorCallback,
     ) {
       this.inherited(arguments, [
         query,
-        (feature) => {
+        feature => {
           var thisB = this;
           let genotype = feature.get("genotypes");
           let samples = Object.keys(genotype);
@@ -31,7 +31,7 @@ define([
 
           let sample_score = 0;
           const field_list = ["DP", "mutect_DP", "strelka_DP", "lofreq_DP"];
-          field_list.forEach((val) => {
+          field_list.forEach(val => {
             if (typeof sample_name[val] != "undefined") {
               sample_score = sample_name[val].values[0];
             }

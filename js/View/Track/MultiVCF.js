@@ -7,7 +7,7 @@ define([
     makeTrackLabel() {
       this.inherited(arguments);
 
-      this.store.getParser().then((header) => {
+      this.store.getParser().then(header => {
         this.samples = header.samples;
       });
     },
