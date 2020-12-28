@@ -60,7 +60,7 @@ define([
         chunks.push(chunk);
       }
 
-      chunks.forEach((c) => {
+      chunks.forEach(c => {
         this.featureCache.get(c, function (f, err) {
           if (err) {
             errorCallback(err);
@@ -82,7 +82,7 @@ define([
 
       this.store.getFeatures(
         { ref, start, end },
-        (feature) => {
+        feature => {
           let genotype = feature.get("genotypes");
           let samples = Object.keys(genotype);
 
@@ -99,7 +99,7 @@ define([
           if (this.GenotypeField == "DP") {
             field_list = ["DP"];
 
-            field_list.forEach((val) => {
+            field_list.forEach(val => {
               if (typeof sample_name[val] != "undefined") {
                 if (sample_name[val].values) {
                   sample_score = sample_name[val].values[0];
@@ -109,7 +109,7 @@ define([
           } else {
             field_list = ["AD"];
             this.config.max_score = 1;
-            field_list.forEach((val) => {
+            field_list.forEach(val => {
               if (typeof sample_name[val] != "undefined") {
                 var all_count = sample_name[val].values.reduce(function (a, b) {
                   return a + b;
@@ -129,22 +129,22 @@ define([
               new SimpleFeature({
                 id: `${start}_${end}`,
                 data: { start, end, score: score / numFeatures },
-              })
+              }),
             );
           } else {
             callback(null);
           }
         },
-        (error) => {
+        error => {
           callback(null, error);
-        }
+        },
       );
     },
     getSampleName: function (
       query,
       featCallback,
       finishCallback,
-      errorCallback
+      errorCallback,
     ) {
       console.log("sample name", query.start);
     },

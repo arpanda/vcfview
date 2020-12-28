@@ -11,7 +11,7 @@ define([
   LRUCache,
   SeqFeatureStore,
   SimpleFeature,
-  VCFTabix
+  VCFTabix,
 ) {
   return declare([VCFTabix, SeqFeatureStore], {
     constructor(args) {
@@ -25,13 +25,13 @@ define([
       //   },
       //   maxSize: 100000,
       // });
-      console.log('check start');
+      console.log("check start");
     },
     async getFeatures(query, featCallback, finishCallback, errorCallback) {
       var binSize = this.binSize;
       var supermethod = this.getInherited(arguments);
       const { ref, start: originalStart, end: originalEnd } = query;
-      console.log('start: ', originalStart, 'end: ',originalEnd);
+      console.log("start: ", originalStart, "end: ", originalEnd);
 
       var start = originalStart - (originalStart % binSize);
       var end = originalEnd + (binSize - (originalEnd % binSize));
@@ -44,7 +44,7 @@ define([
       supermethod.call(
         this,
         { ref, start, end },
-        (feature) => {
+        feature => {
           let genotype = feature.get("genotypes");
           let samples = Object.keys(genotype);
 
@@ -55,28 +55,27 @@ define([
 
           let sample_score = 0;
           const field_list = ["DP", "mutect_DP", "strelka_DP", "lofreq_DP"];
-          field_list.forEach((val) => {
+          field_list.forEach(val => {
             if (typeof sample_name[val] != "undefined") {
               sample_score = sample_name[val].values[0];
             }
           });
           const featureBin = Math.max(
             Math.floor((feature.get("start") - start) / binSize),
-            0
+            0,
           );
           bins[featureBin].score += sample_score;
           bins[featureBin].count++;
         },
         () => {
-          
           var bin_count = 0,
-              bin_score = 0;
+            bin_score = 0;
 
-          bins.forEach((bin)=> {
+          bins.forEach(bin => {
             bin_count += bin.count;
-            bin_score += bin.score
+            bin_score += bin.score;
           });
-          console.log('Avg DP: ', bin_score/bin_count);
+          console.log("Avg DP: ", bin_score / bin_count);
           bins.forEach((bin, i) => {
             if (bin.count) {
               featCallback(
@@ -88,7 +87,7 @@ define([
                     score: bin.score / bin.count,
                     source: "main",
                   },
-                })
+                }),
               );
               featCallback(
                 new SimpleFeature({
@@ -99,13 +98,13 @@ define([
                     score: bin.score / bin.count + 5,
                     source: "secondary",
                   },
-                })
+                }),
               );
             }
           });
           finishCallback();
         },
-        errorCallback
+        errorCallback,
       );
     },
   });

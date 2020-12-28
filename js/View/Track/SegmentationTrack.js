@@ -11,7 +11,7 @@ define([
           store: this.store,
           config: this.config,
           browser: this.browser,
-        })
+        }),
       );
     },
   });

@@ -37,7 +37,7 @@ define([
         chunks.push(chunk);
       }
 
-      chunks.forEach((c) => {
+      chunks.forEach(c => {
         this.featureCache.get(c, (f, err) => {
           if (err) {
             errorCallback(err);
@@ -60,7 +60,7 @@ define([
 
       this.store.getFeatures(
         { ref, start, end },
-        (feature) => {
+        feature => {
           let genotype = feature.get("genotypes");
           let samples = Object.keys(genotype);
 
@@ -71,7 +71,7 @@ define([
 
           let sample_score = 0;
           const field_list = ["DP", "mutect_DP", "strelka_DP", "lofreq_DP"];
-          field_list.forEach((val) => {
+          field_list.forEach(val => {
             if (typeof sample_name[val] != "undefined") {
               sample_score = sample_name[val].values[0];
             }
@@ -87,15 +87,15 @@ define([
               new SimpleFeature({
                 id: `${start}_${end}`,
                 data: { start, end, score: score / numFeatures },
-              })
+              }),
             );
           } else {
             callback(null);
           }
         },
-        (error) => {
+        error => {
           callback(null, error);
-        }
+        },
       );
     },
   });
