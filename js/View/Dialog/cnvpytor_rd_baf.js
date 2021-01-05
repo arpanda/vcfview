@@ -52,36 +52,37 @@ define([
         { style: { padding: "20px" } },
         container,
       );
-      dojo.create(
-        "p",
-        { innerHTML: "Index for the sample in the VCF (if multi-sample VCF)" },
+
+      const flex = dojo.create(
+        "div",
+        { style: { display: "flex", border: "1px solid black" } },
         subcontainer,
       );
-      var sampleIndex = new TextBox({ value: 0 }).placeAt(subcontainer);
-
+      const panel1 = dojo.create("div", { style: { padding: "10px" } }, flex);
       dojo.create(
         "p",
         { innerHTML: "Option 1: URL for a VCF.gz file (tabixed VCF)" },
-        subcontainer,
+        panel1,
       );
 
-      var searchBox = new TextBox().placeAt(subcontainer);
-
+      var searchBox = new TextBox().placeAt(panel1);
+      const panel2 = dojo.create("div", { style: { padding: "10px" } }, flex);
       dojo.create(
         "p",
         {
           innerHTML:
             "Option 2: Open VCF.gz and VCF.gz.tbi file from local computer",
         },
-        subcontainer,
+        panel2,
       );
+
       var fileBox = dojo.create(
         "input",
         { type: "file", multiple: "multiple" },
-        subcontainer,
+        panel2,
       );
 
-      this.sampleIndex = sampleIndex;
+
       this.searchBox = searchBox;
       this.fileBox = fileBox;
 
@@ -89,11 +90,137 @@ define([
         className: "infoDialogActionBar dijitDialogPaneActionBar",
       });
 
+      // Reference genome set
+      const flex3 = dojo.create(
+        "div",
+        { style: { display: "flex", padding: "2px"} },
+        subcontainer,
+      );
+      const panel3 = dojo.create("div", { style: { padding: "1px" } }, flex3);
+      dojo.create(
+        "span",
+        { innerHTML: "Reference genome (used to calibrate GC):", style: {margin: "0 5px 0 0"}},
+        panel3,
+      );
+
+      new Select({
+        name: "reference_name",
+        options: ["hg19", "hg38"].map((sample, index) => ({
+          label: sample,
+          value: sample,
+          selected: index === 0,
+        })),
+      }).placeAt(panel3);
+
+      // Select sample
+      const flex4 = dojo.create(
+        "div",
+        { style: { display: "flex", padding: "1px"} },
+        subcontainer,
+      );
+      const panel4 = dojo.create("div", { style: { padding: "1px" } }, flex4);
+
+      dojo.create(
+        "snan",
+        { innerHTML: "Sample index", style: {margin: "0 5px 0 0"} },
+        panel4,
+      );
+      var sampleIndex = new TextBox({ value: 0, width: "5em" }).placeAt(panel4);
+
+      dojo.create(
+        "snan",
+        { innerHTML: "or ", style: {margin: "0 5px 0 5px"} },
+        panel4,
+      );
+
+      // select sample panel
+      const flex5 = dojo.create(
+        "div",
+        { style: { display: "flex", padding: "1px"} },
+        subcontainer,
+      );
+      const panel5 = dojo.create("div", { style: { padding: "1px" } }, flex5);
+
+      new Button({
+        label: "Load samples from VCF",
+        onClick: async () => {
+          let tabixFile;
+          if (this.searchBox.value) {
+            tabixFile = new TabixIndexedFile({
+              filehandle: new XHRBlob(this.searchBox.value, {
+                expectRanges: true,
+              }),
+              tbiFilehandle: new XHRBlob(this.searchBox.value + ".tbi", {
+                expectRanges: true,
+              }),
+            });
+          } else if (this.fileBox.files.length) {
+            let tbi = 0;
+            let vcf = 0;
+            for (let i = 0; i < this.fileBox.files.length; i++) {
+              const file = this.fileBox.files[i];
+              if (file.name.endsWith("tbi")) {
+                tbi = i;
+              }
+              if (file.name.endsWith("gz")) {
+                vcf = i;
+              }
+            }
+            tabixFile = new TabixIndexedFile({
+              filehandle: new BlobFilehandleWrapper(
+                new FileBlob(this.fileBox.files[vcf]),
+              ),
+              tbiFilehandle: new BlobFilehandleWrapper(
+                new FileBlob(this.fileBox.files[tbi]),
+              ),
+            });
+          }
+
+          if (tabixFile) {
+            let vcfParser = new VCF({ header: await tabixFile.getHeader() });
+            dojo.create(
+              "span",
+              { innerHTML: "Select sample:", style: {margin: "0 5px 0 0"}},
+              panel5,
+            );
+
+            this.sampleSelectBox = new Select({
+              name: "select2",
+              options: vcfParser.samples.map((sample, index) => ({
+                label: sample,
+                value: index,
+                selected: index === 0,
+              })),
+            }).placeAt(panel5);
+          }
+        },
+      }).placeAt(panel4);
+
+
+      // bin size select
+
+      const flex6 = dojo.create(
+        "div",
+        { style: { display: "flex", padding: "1px"} },
+        subcontainer,
+      );
+      const panel6 = dojo.create("div", { style: { padding: "1px" } }, flex6);
+      dojo.create(
+        "snan",
+        { innerHTML: "Bin Size", style: {margin: "0 5px 0 0"} },
+        panel6,
+      );
+      var binSize = new TextBox({ value: 100000, width: "5em" }).placeAt(panel6);
+
+
+      this.sampleIndex = sampleIndex;
+      // these names correspond with the SimpleFeature source field in
+      // Store/SeqFeature/segmentation_complete
       const urlTemplates = [
-        { name: "HepG2", color: "grey" },
-        { name: "HepG2_GC", color: "black" },
-        { name: "HepG2_meanshift", color: "red" },
-        { name: "HepG2_call", color: "green" },
+        { name: "sample", color: "grey" },
+        { name: "sample_GC", color: "black" },
+        { name: "sample_meanshift", color: "red" },
+        { name: "sample_call", color: "green" },
       ];
       new Button({
         label: "Submit",
@@ -132,6 +259,7 @@ define([
             var storeConf = {
               browser: this.browser,
               refSeq: this.browser.refSeq,
+              binSize : binSize.value,
               sample: +this.sampleIndex.value || 0,
               type: "vcfview/Store/SeqFeature/segmentation_complete",
               gcContent: conf,
@@ -195,18 +323,17 @@ define([
         style: { width: "50%" },
       }));
       var container = dom.create("div", {});
-
       var subcontainer = dojo.create(
         "div",
         { style: { padding: "20px" } },
         container,
       );
-
       const flex = dojo.create(
         "div",
         { style: { display: "flex", border: "1px solid black" } },
         subcontainer,
       );
+
       const panel1 = dojo.create("div", { style: { padding: "10px" } }, flex);
       dojo.create(
         "p",
@@ -231,31 +358,38 @@ define([
         panel2,
       );
 
-      this.sampleIndex = sampleIndex;
+
       this.searchBox = searchBox;
       this.fileBox = fileBox;
 
-      dojo.create(
-        "p",
-        { innerHTML: "Reference genome name (used to calibrate GC)" },
+      // sample index selection
+      const flex4 = dojo.create(
+        "div",
+        { style: { display: "flex", padding: "1px"} },
         subcontainer,
       );
-
-      new Select({
-        name: "reference_name",
-        options: ["hg19", "hg38"].map((sample, index) => ({
-          label: sample,
-          value: sample,
-          selected: index === 0,
-        })),
-      }).placeAt(subcontainer);
+      const panel4 = dojo.create("div", { style: { padding: "1px" } }, flex4);
 
       dojo.create(
-        "p",
-        { innerHTML: "Index for the sample in the VCF (if multi-sample VCF)" },
+        "snan",
+        { innerHTML: "Sample index", style: {margin: "0 5px 0 0"} },
+        panel4,
+      );
+      var sampleIndex = new TextBox({ value: 0, width: "5em" }).placeAt(panel4);
+
+      dojo.create(
+        "snan",
+        { innerHTML: "or ", style: {margin: "0 5px 0 5px"} },
+        panel4,
+      );
+
+      // select sample panel
+      const flex5 = dojo.create(
+        "div",
+        { style: { display: "flex", padding: "1px"} },
         subcontainer,
       );
-      var sampleIndex = new TextBox({ value: 0 }).placeAt(subcontainer);
+      const panel5 = dojo.create("div", { style: { padding: "1px" } }, flex5);
 
       new Button({
         label: "Load samples from VCF",
@@ -294,6 +428,12 @@ define([
 
           if (tabixFile) {
             let vcfParser = new VCF({ header: await tabixFile.getHeader() });
+            dojo.create(
+              "span",
+              { innerHTML: "Select sample:", style: {margin: "0 5px 0 0"}},
+              panel5,
+            );
+
             this.sampleSelectBox = new Select({
               name: "select2",
               options: vcfParser.samples.map((sample, index) => ({
@@ -301,15 +441,32 @@ define([
                 value: index,
                 selected: index === 0,
               })),
-            }).placeAt(subcontainer);
+            }).placeAt(panel5);
           }
         },
-      }).placeAt(subcontainer);
+      }).placeAt(panel4);
 
+
+      // Bin size selection
+
+      const flex6 = dojo.create(
+        "div",
+        { style: { display: "flex", padding: "1px"} },
+        subcontainer,
+      );
+      const panel6 = dojo.create("div", { style: { padding: "1px" } }, flex6);
+      dojo.create(
+        "snan",
+        { innerHTML: "Bin Size", style: {margin: "0 5px 0 0"} },
+        panel6,
+      );
+      var binSize = new TextBox({ value: 100000, width: "5em" }).placeAt(panel6);
+
+      this.sampleIndex = sampleIndex;
+      this.binSize = binSize;
       this.actionBar = dojo.create("div", {
         className: "infoDialogActionBar dijitDialogPaneActionBar",
       });
-
       // these names correspond with the SimpleFeature source field in
       // Store/SeqFeature/BAFview.js
       const urlTemplates = [
@@ -331,6 +488,7 @@ define([
           const sampleName = this.sampleSelectBox
             ? this.sampleSelectBox.options[this.sampleSelectBox.value].label
             : "" + this.sampleIndex.value;
+
           //const sampleName = this.sampleSelectBox.value
 
           // if they passed a URL, use the search box

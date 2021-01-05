@@ -45,6 +45,7 @@ define([
   return declare(VCFTabix, {
     constructor(args) {
       this.sample = args.sample || 0;
+      this.binSize = args.binSize || 100000;
       this.featureCache = new AbortablePromiseCache({
         cache: new LRU({
           maxSize: 20,
@@ -61,7 +62,8 @@ define([
         query.ref,
       );
 
-      let binSize = 100000;
+      // let binSize = 100000;
+      let binSize = this.binSize;
       var bins = [];
 
       const refName = query.ref.replace("chr", "");

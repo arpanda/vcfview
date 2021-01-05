@@ -23,10 +23,10 @@
       "noFill": true,
       "gcContent": "hg19.100000.gc",
       "urlTemplates": [
-        { "name": "HepG2", "color": "grey" },
-        { "name": "HepG2_GC", "color": "black" },
-        { "name": "HepG2_meanshift", "color": "red" },
-        { "name": "HepG2_call", "color": "green" }
+        { "name": "sample", "color": "grey" },
+        { "name": "sample_GC", "color": "black" },
+        { "name": "sample_meanshift", "color": "red" },
+        { "name": "sample_call", "color": "green" }
       ]
     },
     {
@@ -40,9 +40,9 @@
       "noFill": true,
       "GenotypeField": "AD",
       "urlTemplates": [
-        { "name": "HepG2", "color": "red", "nonCont": true },
-        { "name": "HepG2_BAF", "color": "blue", "nonCont": true},
-        { "name": "HepG2_MIN", "color": "red", "nonCont": true}
+        { "name": "sample", "color": "red", "nonCont": true },
+        { "name": "sample_BAF", "color": "blue", "nonCont": true},
+        { "name": "sample_MIN", "color": "red", "nonCont": true}
       ]
     }
   ]

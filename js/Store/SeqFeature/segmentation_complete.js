@@ -57,6 +57,8 @@ define([
   return declare(VCFTabix, {
     constructor(args) {
       this.sample = args.sample || 0;
+
+      this.bin_size = args.bin_size || 100000;
       this.featureCache = new AbortablePromiseCache({
         cache: new LRU({
           maxSize: 20,
