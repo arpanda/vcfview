@@ -24,7 +24,9 @@ git clone https://github.com/arpanda/vcfview.git
  http://localhost/jbrowse/jbrowse/?data=test_vcfview
 
 ```
+## Demo link
 
+Here is the Demo link: https://arpanda.github.io/vcfview/Jbrowse/?data=plugins/vcfview/test/data
 ## Example config
 
 
