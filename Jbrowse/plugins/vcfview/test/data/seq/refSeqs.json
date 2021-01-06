@@ -1,0 +1,171 @@
+[
+  { "end": 249250621, "length": 249250621, "name": "chr1", "start": 0 },
+  { "end": 243199373, "length": 243199373, "name": "chr2", "start": 0 },
+  { "end": 198022430, "length": 198022430, "name": "chr3", "start": 0 },
+  { "end": 191154276, "length": 191154276, "name": "chr4", "start": 0 },
+  { "end": 180915260, "length": 180915260, "name": "chr5", "start": 0 },
+  { "end": 171115067, "length": 171115067, "name": "chr6", "start": 0 },
+  { "end": 159138663, "length": 159138663, "name": "chr7", "start": 0 },
+  { "end": 155270560, "length": 155270560, "name": "chrX", "start": 0 },
+  { "end": 146364022, "length": 146364022, "name": "chr8", "start": 0 },
+  { "end": 141213431, "length": 141213431, "name": "chr9", "start": 0 },
+  { "end": 135534747, "length": 135534747, "name": "chr10", "start": 0 },
+  { "end": 135006516, "length": 135006516, "name": "chr11", "start": 0 },
+  { "end": 133851895, "length": 133851895, "name": "chr12", "start": 0 },
+  { "end": 115169878, "length": 115169878, "name": "chr13", "start": 0 },
+  { "end": 107349540, "length": 107349540, "name": "chr14", "start": 0 },
+  { "end": 102531392, "length": 102531392, "name": "chr15", "start": 0 },
+  { "end": 90354753, "length": 90354753, "name": "chr16", "start": 0 },
+  { "end": 81195210, "length": 81195210, "name": "chr17", "start": 0 },
+  { "end": 78077248, "length": 78077248, "name": "chr18", "start": 0 },
+  { "end": 63025520, "length": 63025520, "name": "chr20", "start": 0 },
+  { "end": 59373566, "length": 59373566, "name": "chrY", "start": 0 },
+  { "end": 59128983, "length": 59128983, "name": "chr19", "start": 0 },
+  { "end": 51304566, "length": 51304566, "name": "chr22", "start": 0 },
+  { "end": 48129895, "length": 48129895, "name": "chr21", "start": 0 },
+  { "end": 4928567, "length": 4928567, "name": "chr6_ssto_hap7", "start": 0 },
+  { "end": 4833398, "length": 4833398, "name": "chr6_mcf_hap5", "start": 0 },
+  { "end": 4795371, "length": 4795371, "name": "chr6_cox_hap2", "start": 0 },
+  { "end": 4683263, "length": 4683263, "name": "chr6_mann_hap4", "start": 0 },
+  { "end": 4622290, "length": 4622290, "name": "chr6_apd_hap1", "start": 0 },
+  { "end": 4611984, "length": 4611984, "name": "chr6_qbl_hap6", "start": 0 },
+  { "end": 4610396, "length": 4610396, "name": "chr6_dbb_hap3", "start": 0 },
+  { "end": 1680828, "length": 1680828, "name": "chr17_ctg5_hap1", "start": 0 },
+  { "end": 590426, "length": 590426, "name": "chr4_ctg9_hap1", "start": 0 },
+  {
+    "end": 547496,
+    "length": 547496,
+    "name": "chr1_gl000192_random",
+    "start": 0
+  },
+  { "end": 211173, "length": 211173, "name": "chrUn_gl000225", "start": 0 },
+  {
+    "end": 191469,
+    "length": 191469,
+    "name": "chr4_gl000194_random",
+    "start": 0
+  },
+  {
+    "end": 189789,
+    "length": 189789,
+    "name": "chr4_gl000193_random",
+    "start": 0
+  },
+  {
+    "end": 187035,
+    "length": 187035,
+    "name": "chr9_gl000200_random",
+    "start": 0
+  },
+  { "end": 186861, "length": 186861, "name": "chrUn_gl000222", "start": 0 },
+  { "end": 186858, "length": 186858, "name": "chrUn_gl000212", "start": 0 },
+  {
+    "end": 182896,
+    "length": 182896,
+    "name": "chr7_gl000195_random",
+    "start": 0
+  },
+  { "end": 180455, "length": 180455, "name": "chrUn_gl000223", "start": 0 },
+  { "end": 179693, "length": 179693, "name": "chrUn_gl000224", "start": 0 },
+  { "end": 179198, "length": 179198, "name": "chrUn_gl000219", "start": 0 },
+  {
+    "end": 174588,
+    "length": 174588,
+    "name": "chr17_gl000205_random",
+    "start": 0
+  },
+  { "end": 172545, "length": 172545, "name": "chrUn_gl000215", "start": 0 },
+  { "end": 172294, "length": 172294, "name": "chrUn_gl000216", "start": 0 },
+  { "end": 172149, "length": 172149, "name": "chrUn_gl000217", "start": 0 },
+  {
+    "end": 169874,
+    "length": 169874,
+    "name": "chr9_gl000199_random",
+    "start": 0
+  },
+  { "end": 166566, "length": 166566, "name": "chrUn_gl000211", "start": 0 },
+  { "end": 164239, "length": 164239, "name": "chrUn_gl000213", "start": 0 },
+  { "end": 161802, "length": 161802, "name": "chrUn_gl000220", "start": 0 },
+  { "end": 161147, "length": 161147, "name": "chrUn_gl000218", "start": 0 },
+  {
+    "end": 159169,
+    "length": 159169,
+    "name": "chr19_gl000209_random",
+    "start": 0
+  },
+  { "end": 155397, "length": 155397, "name": "chrUn_gl000221", "start": 0 },
+  { "end": 137718, "length": 137718, "name": "chrUn_gl000214", "start": 0 },
+  { "end": 129120, "length": 129120, "name": "chrUn_gl000228", "start": 0 },
+  { "end": 128374, "length": 128374, "name": "chrUn_gl000227", "start": 0 },
+  {
+    "end": 106433,
+    "length": 106433,
+    "name": "chr1_gl000191_random",
+    "start": 0
+  },
+  {
+    "end": 92689,
+    "length": 92689,
+    "name": "chr19_gl000208_random",
+    "start": 0
+  },
+  { "end": 90085, "length": 90085, "name": "chr9_gl000198_random", "start": 0 },
+  {
+    "end": 81310,
+    "length": 81310,
+    "name": "chr17_gl000204_random",
+    "start": 0
+  },
+  { "end": 45941, "length": 45941, "name": "chrUn_gl000233", "start": 0 },
+  { "end": 45867, "length": 45867, "name": "chrUn_gl000237", "start": 0 },
+  { "end": 43691, "length": 43691, "name": "chrUn_gl000230", "start": 0 },
+  { "end": 43523, "length": 43523, "name": "chrUn_gl000242", "start": 0 },
+  { "end": 43341, "length": 43341, "name": "chrUn_gl000243", "start": 0 },
+  { "end": 42152, "length": 42152, "name": "chrUn_gl000241", "start": 0 },
+  { "end": 41934, "length": 41934, "name": "chrUn_gl000236", "start": 0 },
+  { "end": 41933, "length": 41933, "name": "chrUn_gl000240", "start": 0 },
+  {
+    "end": 41001,
+    "length": 41001,
+    "name": "chr17_gl000206_random",
+    "start": 0
+  },
+  { "end": 40652, "length": 40652, "name": "chrUn_gl000232", "start": 0 },
+  { "end": 40531, "length": 40531, "name": "chrUn_gl000234", "start": 0 },
+  {
+    "end": 40103,
+    "length": 40103,
+    "name": "chr11_gl000202_random",
+    "start": 0
+  },
+  { "end": 39939, "length": 39939, "name": "chrUn_gl000238", "start": 0 },
+  { "end": 39929, "length": 39929, "name": "chrUn_gl000244", "start": 0 },
+  { "end": 39786, "length": 39786, "name": "chrUn_gl000248", "start": 0 },
+  { "end": 38914, "length": 38914, "name": "chr8_gl000196_random", "start": 0 },
+  { "end": 38502, "length": 38502, "name": "chrUn_gl000249", "start": 0 },
+  { "end": 38154, "length": 38154, "name": "chrUn_gl000246", "start": 0 },
+  {
+    "end": 37498,
+    "length": 37498,
+    "name": "chr17_gl000203_random",
+    "start": 0
+  },
+  { "end": 37175, "length": 37175, "name": "chr8_gl000197_random", "start": 0 },
+  { "end": 36651, "length": 36651, "name": "chrUn_gl000245", "start": 0 },
+  { "end": 36422, "length": 36422, "name": "chrUn_gl000247", "start": 0 },
+  { "end": 36148, "length": 36148, "name": "chr9_gl000201_random", "start": 0 },
+  { "end": 34474, "length": 34474, "name": "chrUn_gl000235", "start": 0 },
+  { "end": 33824, "length": 33824, "name": "chrUn_gl000239", "start": 0 },
+  {
+    "end": 27682,
+    "length": 27682,
+    "name": "chr21_gl000210_random",
+    "start": 0
+  },
+  { "end": 27386, "length": 27386, "name": "chrUn_gl000231", "start": 0 },
+  { "end": 19913, "length": 19913, "name": "chrUn_gl000229", "start": 0 },
+  { "end": 16571, "length": 16571, "name": "chrM", "start": 0 },
+  { "end": 15008, "length": 15008, "name": "chrUn_gl000226", "start": 0 },
+  { "end": 4262, "length": 4262, "name": "chr18_gl000207_random", "start": 0 }
+]
+
